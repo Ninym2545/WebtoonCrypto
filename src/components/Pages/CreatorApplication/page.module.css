@@ -1,0 +1,9 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@100;200;300;400;500;600;700;800;900&display=swap');
+
+.component{
+    margin-top: 20px;
+
+    gap: 20px;
+    grid-auto-rows: minmax(180px, auto);
+    font-family: 'Noto Sans Thai',helvetica neue,Helvetica,sans-serif;
+}

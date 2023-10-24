@@ -1,0 +1,63 @@
+.container{
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+
+}
+
+.section{
+    display: flex;
+    overflow: hidden;
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+    list-style: none;
+    
+}
+
+.weeknav{
+    @apply relative mt-[20px] w-full overflow-x-scroll  lg:w-full
+
+}
+.weeknav::-webkit-scrollbar {
+    display: none;
+}
+
+.section .daysection {
+    margin-left: 0.75rem;
+    margin-right: 0.75rem;
+    
+}
+
+@media screen and (max-width: 800px) {
+    .links{
+        @apply text-[14px]
+    }
+
+  }
+
+.section .daysection .links{
+    position: relative;
+    display: block;
+    text-transform: uppercase;
+    font-weight: 700;
+    list-style: none;
+}
+.daysection{
+    cursor: pointer;
+    
+}
+
+.ulrank{
+    @apply flex  items-center w-[550px] mx-auto 
+}
+
+ .lirank{
+    @apply list-none py-1 mx-1 px-1 flex
+}
+ .lirank .linkxrank{
+    @apply relative block no-underline uppercase   md:relative md:block md:no-underline md:uppercase 
+}
+
+

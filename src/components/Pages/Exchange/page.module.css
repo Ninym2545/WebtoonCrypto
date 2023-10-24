@@ -1,0 +1,26 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@100;200;300;400;500;600;700;800;900&display=swap');
+
+.component{
+    margin-top: 30px;
+    margin-bottom: 30px;
+    display: grid;
+    gap: 20px;
+    grid-template-columns: repeat(4, 1fr);
+    grid-auto-rows: minmax(180px, auto);
+    font-family: 'Noto Sans Thai',helvetica neue,Helvetica,sans-serif;
+}
+.scroll{
+    overflow-y: scroll;
+    height: 70vh;
+    width: 1200px;
+}
+@media only screen and (max-width: 600px) {
+    .scroll{
+        overflow-y: scroll;
+        height: 70vh;
+        width: 440px;
+    }
+  }
+.scroll::-webkit-scrollbar {
+    display: none;
+  }

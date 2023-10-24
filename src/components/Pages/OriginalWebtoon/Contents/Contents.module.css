@@ -1,0 +1,66 @@
+.container{
+    width: 100%;
+    height: 100%;
+    position: relative;
+    overflow: hidden;
+    margin-left: auto;
+    margin-right: auto;
+    
+  }
+  
+  .cartoon{
+    align-content: flex-start;
+    align-items: flex-start;
+    display: flex;
+    flex-wrap: wrap;
+    height: 100%;
+    position: relative;
+    padding-top: 136px;  
+     
+  }
+  
+  .card{
+    margin-right: auto;
+    margin-left: auto;
+    margin-top: auto;
+    margin-bottom: auto;
+  }
+  
+  .daysection{
+   @apply mx-auto pt-[200px]  
+  }
+  
+  .header{
+    @apply font-bold text-[1.60rem] opacity-70 mb-8 mt-[0.1rem]
+  }
+  
+  .text{
+    color: gray;
+    font-size: 28px;
+    font-weight: 900;
+    line-height: 36px;
+    overflow-wrap: break-word;
+    white-space: pre-wrap;
+    align-self: flex-end;
+    margin-bottom: 1.5rem;
+    margin-top: 1.5rem;
+  }
+  
+  .grid{
+   @apply content-start flex flex-wrap  gap-1 mx-auto mb-20
+  }
+  
+  .cell{
+    position: relative;
+  }
+  
+  .img{
+    width: 200px;
+  }
+  
+  .box{
+    background-color: white;
+    width: 100%;
+    height: 130px;
+    
+  }

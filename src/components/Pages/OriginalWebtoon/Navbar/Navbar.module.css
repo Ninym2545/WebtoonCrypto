@@ -1,0 +1,41 @@
+.container{
+    position: relative;
+    display: flex;
+    position: fixed;
+    flex-direction: column;
+    z-index:98;
+    width: 100%;
+
+}
+
+.section{
+    display: flex;
+    overflow: hidden;
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+    list-style: none;
+}
+
+.weeknav{
+    position: relative;
+    margin-top: 70px;
+}
+
+.section .daysection {
+    margin-left: 0.75rem;
+    margin-right: 0.75rem;
+    
+}
+
+.section .daysection .links{
+    position: relative;
+    display: block;
+    text-transform: uppercase;
+    list-style: none;
+    
+}
+.daysection{
+    cursor: pointer;
+    
+}

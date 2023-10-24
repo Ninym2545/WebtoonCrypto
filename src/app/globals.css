@@ -1,27 +1,124 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-:root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
+.container{
+  max-width: 1410px;
+  min-height: 94vh;
+  margin: 0 auto; 
+  padding: 0 60px;
+  display: flex;
+  flex-direction: column;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
+.component{
+  @apply lg:grid lg:gap-[20px] lg:grid-cols-4 lg:auto-rows-fr 
+}
+.componentchapter{
+  @apply lg:grid lg:gap-[20px] lg:grid-cols-4  
+}
+
+.scrollinputimage{
+  overflow-y: scroll;
+  height: 84vh;
+}
+.scrollinputimage::-webkit-scrollbar {
+  display: none;
+}
+body::-webkit-scrollbar {
+  display: none;
+}
+
+.responsive-cell{
+  @apply lg:w-[calc(98%/6)] md:w-[calc(98%/5)] 
+ } 
+ .responsive-cell-rating{
+  @apply lg:w-[calc(98%/6)] md:w-[calc(97%/5)] 
+}
+ .responsive-cell-library{
+  @apply lg:w-[calc(98%/8)] md:w-[calc(96%/5)] 
+}
+
+/* Use a media query to add a breakpoint at 800px: */
+@media screen and (max-width: 800px) {
+  .responsive-cell-rating{
+    @apply w-[calc(97%/3)] 
+  }
+  .responsive-cell-library{
+    @apply w-[calc(96%/3)] 
+  }
+  .responsive-cell{
+    @apply w-[calc(97%/3)] 
   }
 }
 
-body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
+
+.liactionrank{
+  @apply bg-[#A9A9A9] rounded-full
 }
+ .area{
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
+  height: 130px;
+  opacity: 0.5;
+}
+
+
+ .active{
+  border-radius: 15px;
+  background-color: #A9A9A9;
+  padding-left: 0.6rem/* 8px */;
+  padding-right: 0.6rem/* 8px */;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  
+}
+
+.showdata{
+  overflow-y: scroll;
+  height: 580px;
+}
+
+.showdata::-webkit-scrollbar {
+  display: none;
+}
+body::-webkit-scrollbar {
+  display: none;
+}
+.boxcash{
+  grid-column: span 2;
+  grid-row: span 3;
+}
+.boxpayment{
+  grid-column: span 2;
+  grid-row: span 4;
+}
+.ratetheme{
+  @apply flex w-full justify-between p-5 border border-gray-200 rounded-lg cursor-pointer dark:hover:text-gray-300 dark:border-gray-700 dark:peer-checked:text-blue-500 peer-checked:border-blue-600 peer-checked:text-blue-600 hover:text-gray-600 hover:bg-gray-200 dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700
+}
+.box{
+  @apply p-[20px] rounded-[10px] shadow-sm border
+}
+
+.scroll-indicator {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background-color: #333;
+  color: #fff;
+  padding: 10px 20px;
+  border-radius: 5px;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.show {
+  opacity: 1;
+}
+
+   .hiddens {
+      display: none;
+      opacity: 0;
+      transition: opacity 0.5s ease-in-out;
+    }

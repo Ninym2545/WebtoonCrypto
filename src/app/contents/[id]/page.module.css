@@ -1,0 +1,49 @@
+.container {
+    font-family: 'Noto Sans Thai',helvetica neue,Helvetica,sans-serif;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 110px;
+    
+  }
+  
+  .top {
+    display: flex;
+  }
+  
+  .imgpos{
+    height: auto;
+  }
+  .info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  
+  .title{
+    font-size: 40px;
+  }
+  
+  .desc{
+    font-size: 18px;
+    font-weight: 300;
+  }
+  
+  .author {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  .avatar {
+    object-fit: cover;
+    border-radius: 50%;
+  }
+  
+  
+  
+  
+  
+  
+  

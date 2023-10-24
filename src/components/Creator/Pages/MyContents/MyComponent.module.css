@@ -1,0 +1,193 @@
+.container{
+    display: flex;
+    justify-content: center;
+  }
+
+  .containernav{
+    position: relative;
+    display: flex;
+    position: fixed;
+    flex-direction: column;
+    z-index:98;
+    width: 100%;
+
+}
+
+.section{
+    display: flex;
+    overflow: hidden;
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+    list-style: none;
+}
+
+.weeknav{
+    position: relative;
+    margin-top: 70px;
+}
+
+.section .daysection {
+    margin-left: 0.75rem;
+    margin-right: 0.75rem;
+}
+
+.section .daysection .links{
+    position: relative;
+    display: block;
+    text-transform: uppercase;
+    font-weight: 700;
+    list-style: none;
+}
+.daysection{
+    cursor: pointer;
+    
+}
+
+.ulrank{
+    @apply flex  overflow-hidden justify-center flex-nowrap  scroll-smooth 
+}
+.ulrank .lirank{
+    @apply list-none md:list-none mx-3
+}
+.ulrank .lirank .linkxrank{
+    @apply relative block no-underline uppercase  font-bold md:relative md:block md:no-underline md:uppercase 
+}
+.links{
+    font-family: 'Noto Sans Thai',helvetica neue,Helvetica,sans-serif;
+    font-weight: 600;
+}
+
+
+.containercard{
+    width: 100%;
+    height: 100%;
+    position: relative;
+    overflow: hidden;
+    
+}
+
+.cartoon{
+    align-content: flex-start;
+    align-items: flex-start;
+    display: flex;
+    flex-wrap: wrap;
+    height: 100%;
+    position: relative;
+    flex-direction: column;
+  
+}
+
+.card{
+    margin-right: auto;
+    margin-left: auto;
+    margin-top: auto;
+    margin-bottom: auto;
+}
+
+.daysection{
+   @apply mx-auto pt-[80px]  max-w-[80rem]
+}
+
+.header{
+    @apply font-bold text-[1.60rem] opacity-70 mb-8 mt-12
+}
+
+.text{
+    color: gray;
+    font-size: 28px;
+    font-weight: 900;
+    line-height: 36px;
+    overflow-wrap: break-word;
+    white-space: pre-wrap;
+    align-self: flex-end;
+    margin-bottom: 1.5rem;
+    margin-top: 1.5rem;
+}
+
+.grid{
+    align-content: flex-start;
+    flex-wrap: wrap;
+    display: flex;
+    gap: 9px;
+}
+
+.cell{
+    position: relative;
+}
+
+.img{
+    width: 200px;
+}
+
+.box{
+    background-color: white;
+    width: 100%;
+    height: 130px;
+    
+}
+
+.bannerimg{
+    width: 100%;
+    height: 300px;
+}
+
+.banner{
+    padding-top: 136px; 
+}
+
+.containerhead{
+    position: relative;
+    display: flex;
+    position: fixed;
+    flex-direction: column;
+    z-index:98;
+    width: 100%;
+
+}
+
+.section{
+    display: flex;
+    overflow: hidden;
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+    list-style: none;
+}
+
+.weeknav{
+    position: relative;
+    margin-top: 70px;
+}
+
+.section .daysection {
+    margin-left: 0.75rem;
+    margin-right: 0.75rem;
+}
+
+.section .daysection .links{
+    position: relative;
+    display: block;
+    text-transform: uppercase;
+    font-weight: 700;
+    list-style: none;
+}
+.daysection{
+    cursor: pointer;
+    
+}
+
+.ulrank{
+    @apply flex  overflow-hidden justify-center flex-nowrap  scroll-smooth 
+}
+.ulrank .lirank{
+    @apply list-none md:list-none mx-3
+}
+.ulrank .lirank .linkxrank{
+    @apply relative block no-underline uppercase  font-bold md:relative md:block md:no-underline md:uppercase 
+}
+.links{
+    font-family: 'Noto Sans Thai',helvetica neue,Helvetica,sans-serif;
+    font-weight: 600;
+}
+
