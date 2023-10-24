@@ -12,22 +12,21 @@ const inter = Noto_Sans_Thai({ subsets: ["latin"], weight: ["500"] });
 
 
 
-export default function RootLayout({
-  children,
-}: {
+interface RootLayoutProps {
   children: React.ReactNode;
-}) {
+}
 
+export default function RootLayout({ children }: RootLayoutProps) {
   const [loading, setLoading] = useState(true);
   const [nav, setNav] = useState(false);
-  const [shownav , setShownav] = useState(false);
+  const [shownav, setShownav] = useState(false);
 
   useEffect(() => {
-
-    if (window.location.href.includes("creator") || window.location.href.includes("admin")  ) {
+    if (window.location.href.includes('creator') || window.location.href.includes('admin')) {
       setNav(true);
-    }if (window.location.href.includes("contents/") || window.location.href.includes("viewer/") ){
-      setShownav(true)
+    }
+    if (window.location.href.includes('contents/') || window.location.href.includes('viewer/')) {
+      setShownav(true);
     }
     // Simulate a delay to demonstrate the loading page
     const timeout = setTimeout(() => {
@@ -43,14 +42,14 @@ export default function RootLayout({
       <body className={inter.className}>
         <ChakraProvider>
           <AuthProvider>
-          {loading ? (
-        <Loading />
-      ) : (
-        <>
-             {shownav ? <></> : nav ? <Sidebar children={children} /> : <WithSubnavigation />}
-            {nav ? <></> : children} {/* Removed extra curly braces */}
-        </>
-      )}
+            {loading ? (
+              <Loading />
+            ) : (
+              <>
+                {shownav ? null : nav ? <Sidebar children={children} /> : <WithSubnavigation />}
+                {nav ? null : children}
+              </>
+            )}
           </AuthProvider>
         </ChakraProvider>
       </body>
