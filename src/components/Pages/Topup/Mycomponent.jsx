@@ -366,7 +366,7 @@ const Mycomponent = () => {
                                         </button>
                                     </Tab>
                                 </form>
-                                <Tab> <Image src={Metamask} alt='' className="w-8 h-8 mx-1" />MetaMark</Tab>
+                                <Tab> <img src='MetaMask_Fox.svg.png' alt='' className="w-8 h-8 mx-1" />MetaMark</Tab>
                             </TabList>
                             <TabPanels>
                                 <TabPanel>
