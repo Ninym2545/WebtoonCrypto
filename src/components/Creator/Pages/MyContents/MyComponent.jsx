@@ -165,7 +165,7 @@ const MyComponent = () => {
           console.log('sentData');
           const res = await uploadchapter(formData, formDataImg, chapternumber, title, dataselect , isSwitchOn);
 
-          if (res?.msg) alert('Update Content success')
+          if (res?.msg) console.log('Update Content success')
           let timerInterval
           Swal.fire({
             title: "กำลังสร้างการ์ตูน",
