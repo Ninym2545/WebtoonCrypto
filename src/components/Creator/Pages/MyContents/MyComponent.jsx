@@ -160,10 +160,10 @@ const MyComponent = () => {
         cancelButtonColor: '#d33',
         cancelButtonText: 'ยกเลิก',
         confirmButtonText: 'แก้ไขผลงาน'
-      }).then((result) => {
+      }).then(async (result) => {
         if (result.isConfirmed) {
           console.log('sentData');
-          const res = uploadchapter(formData, formDataImg, chapternumber, title, dataselect , isSwitchOn);
+          const res = await uploadchapter(formData, formDataImg, chapternumber, title, dataselect , isSwitchOn);
 
           if (res?.msg) alert('Update Content success')
           let timerInterval
