@@ -19,14 +19,14 @@ export const POST = async (require) => {
   try {
     const {  Wallet,Coin,user_id } = await require.json();
     console.log('Wallet', Wallet);
-    console.log('Coin', Coin);
+    console.log('Coin', Coin );
     console.log('user_id', user_id);
 
      // Create a new Buy_Rent document
      const createWithdraw = new WithDraw({
         user_id: user_id,
         wallet_id: Wallet,
-        cash: Coin,
+        cash: Coin * 100,
       });
       console.log('createWithdraw ---> ', createWithdraw);
         await createWithdraw.save();
