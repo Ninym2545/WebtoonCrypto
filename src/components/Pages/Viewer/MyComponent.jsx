@@ -35,17 +35,23 @@ const MyComponent = async ({ viewer }) => {
 
   const route = useRouter();
   const session = useSession();
-  const [post , setPost] = useState();
-  const [con , setCon] = useState();
-  const [chapter, setChapter] = useState();
+  const [Menu , setMenu] = useState();
+  const [MenuNotRent , setMenuNotRent] = useState();
   const [dataImg , setDataImg] = useState();
+  
+  // new
+  const [FilterChapter , setFilterChapter] = useState();
+  const [originaChapters, setOriginaChapters] = useState([])
+  const [orders, setOrders] = useState([]);
   const handleContextMenu = (e) => {
     e.preventDefault(); // ยกเลิกการแสดงเมนูคลิกขวา
     // ทำสิ่งที่คุณต้องการเมื่อมีการคลิกขวาที่นี่
   };
 
   useEffect(() => {
-
+    if (session?.status === "unauthenticated") {
+      window.location.href = "/";
+    }
     const chapter_id = viewer.contentid;
     fetch(`/api/chapter/${chapter_id}`) // Make sure this URL is correct
     .then((res) => {
@@ -55,87 +61,32 @@ const MyComponent = async ({ viewer }) => {
       return res.json();
     })
     .then((content) => {
-      try {
-        if (session.data?.user) {
-          setChapter(content);
-
-
-          const user = session.data.user.buyrent;
-          // คัดกรองข้อมูลจาก filters ที่ตรงกับ content._id
-          const filters = user.filter((user) => user.content_id === content._id);
-
-          if (filters.length > 0) {
-            // ใช้ filter เพื่อกรอง chapter ที่ตรงกับ contentIds
-            const contentIds = filters.map((filter) => filter.chapter_id);
-
-            const chapterfilter = content.chapter.filter((chap) => contentIds.includes(chap._id));
-
-            const updatedChapterFilter = chapterfilter.map((chap, index) => ({
-              ...chap,
-              upload: true,
-              status: filters[index].status
-            }));
-            // หาข้อมูลที่มี _id ตรงกันใน data1 และ data2
-            const mergedData = content.chapter.map(item1 => {
-              const matchingItem = updatedChapterFilter.find(item2 => item2._id === item1._id);
-              if (matchingItem) {
-                return matchingItem; // ใช้ข้อมูลจาก data2
-              }
-              return item1; // ใช้ข้อมูลเดิมจาก data1
-            });
-
-            // ลากตัวแปร mergedData ไปใช้งานต่อ
-            setChapter(mergedData)
-            const filterDataImg = mergedData.find((data) => data._id === viewer.id)
-             if(filterDataImg.upload === true){
-              setDataImg(filterDataImg)
-             }else{
-              route.push(`/contents/${chapter_id}`);
-             }
-          }
-        } else {
-          setChapter(content);
-        }
-      } catch (error) {
-        console.log('error', error);
+      // console.log('content ' ,content?.chapter);
+      if (content?.chapter) {
+        const filterChapter = content?.chapter.find(item => item._id === viewer.id )
+        // console.log('view' ,filterChapter);
+        setFilterChapter(filterChapter)
+        setOriginaChapters(content?.chapter)
+        // console.log('MyChapter', session?.data?.user.buyrent);
+        const myorders = session?.data?.user.buyrent;
+        setOrders(myorders)
       }
+
     })
     .catch((error) => {
       console.error('Error fetching data:', error);
     });
   }, [viewer]);
 
-  useEffect(() => {
-    if(session.data?.user){
-      const fetchData = async () => {
-        try {
-          const postData = await getData(viewer.id);
-          setPost(postData);
-    
-          const chapterData = await getDataChapter(viewer.contentid);
-          setCon(chapterData);
-    
-          // Do something with postData and chapterData
-        } catch (error) {
-          console.error('Error fetching data:', error);
-          // Handle the error (e.g., display an error message)
-        }
-      };
-    
-      fetchData();
-    }else{
-      route.push('/login')
-    }
 
-  }, [viewer]);
   
 
   return (
     <><div onContextMenu={handleContextMenu}>
-
-      <Navbar data={con} dataimg={post} />
+ 
+      <Navbar Menu={orders} Original={originaChapters} viewer={viewer}/>
       <div className='container'>
-        <Data data={dataImg} content={con} />
+        <Data dataImg={FilterChapter}  />
       </div>
     </div>
     </>

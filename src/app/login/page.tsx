@@ -10,6 +10,8 @@ import Metamask from "../../assets/MetaMask_Fox.svg.png";
 import Google from "../../assets/google.png";
 import Image from "next/image";
 import pika from '../../assets/download.gif'
+
+
 const page = () => {
   const session = useSession();
   const router = useRouter();
@@ -17,9 +19,7 @@ const page = () => {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
 
-  useEffect(() => {
 
-  }, [session]);
   
   if (session.status === "loading") {
     return <div className="w-full h-[94vh] flex justify-center my-auto">
@@ -31,16 +31,6 @@ const page = () => {
   }else if (session.status === "authenticated") {
     router?.push("/");
   }
-
- 
-
-  // useEffect(() => {
-  //     setError(params.get("error"));
-  //   if(params.get('error') === "AccessDenied"){
-  //     setError("Email has already been used.")
-  //   }
-  //   setSuccess(params.get("success"));
-  // }, [params]);
 
   const handleCredentialsLogin = async (e: any) => {
     e.preventDefault();
@@ -65,9 +55,7 @@ const page = () => {
               <div className="border-2 w-10 border-[#2D3131] inline-block mb-2"></div>
 
               <div className="flex justify-center my-2">
-                <button className="border-2 border-gray-200 rounded-full p-2 mx-1">
-                  <Image src={Metamask} alt="" className="w-9 h-9" />
-                </button>
+               
 
                 <button
                   onClick={() => signIn("google", { callbackUrl: "/" })}

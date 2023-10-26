@@ -79,6 +79,10 @@ const MyComponent = () => {
 
 
   useEffect(() => {
+    if (session?.status === "unauthenticated") {
+      window.location.href = "/";
+    }
+    
     setTimeout(() => {
       fetch(`/api/contents/${session.data?.user._id}`).then(res => res.json()).then(data => {
         setData(data)
@@ -189,20 +193,13 @@ const MyComponent = () => {
                 showConfirmButton: false,
                 timer: 3000
               })
-              setTimeout(() => {
-                fetch(`/api/contents/${session.data?.user._id}`)
-                .then((res) => res.json())
-                .then((data) => {
-                  setData(data);
-                  console.log('update ---> ', data);
-            
-                  // เมื่อโหลดข้อมูลเสร็จแล้วทำการล้างข้อมูลอื่น ๆ และรีเซ็ตฟอร์ม
-                  setFiles([]);
-                  setFileImgs([]);
-                  formRef.current.reset();
-                });
-                // location.reload()
-              }, 2000);
+                 // เมื่อโหลดข้อมูลเสร็จแล้วทำการล้างข้อมูลอื่น ๆ และรีเซ็ตฟอร์ม
+                 setFiles([]);
+                 setFileImgs([]);
+                 formRef.current.reset();
+                 fetch(`/api/contents/${session.data?.user._id}`)
+                 .then((response) => response.json())
+                 .then((data) => setData(data));
             }
 
 

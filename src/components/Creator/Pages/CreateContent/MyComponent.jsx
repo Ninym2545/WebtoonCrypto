@@ -1,6 +1,6 @@
 "use client"
 import { Box, Button, FormControl, Input, Stack, Text, useColorModeValue } from '@chakra-ui/react'
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import Previewimage from './Previewimage'
 import Previewinput from './Previewinput'
 import { Textarea } from '@chakra-ui/react'
@@ -37,6 +37,11 @@ const MyComponent = () => {
   const session = useSession();
   const route = useRouter();
 
+  useEffect(() => {
+    if (session?.status === "unauthenticated") {
+      window.location.href = "/";
+    }
+  },[])
   // --- Checkbox --- //
   const [isChecked, setIsChecked] = useState(false);
   const [formDataContent, setFormDataContent] = useState({});

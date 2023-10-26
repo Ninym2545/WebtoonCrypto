@@ -7,8 +7,9 @@ import AuthProvider from "@/components/AuthProvider/AuthProvider";
 import { useEffect, useState } from "react";
 import Loading from "./loading";
 import Sidebar from "../components/Sidebar/Sidebar";
-const inter = Noto_Sans_Thai({ subsets: ["latin"], weight: ["500"] });
 
+
+const inter = Noto_Sans_Thai({ subsets: ["latin"]});
 export default function RootLayout({ children }) {
   const [loading, setLoading] = useState(true);
   const [nav, setNav] = useState(false);
@@ -52,7 +53,7 @@ export default function RootLayout({ children }) {
                 ) : (
                   <WithSubnavigation />
                 )}
-                {nav ? <></> : children} {/* Removed extra curly braces */}
+                {nav ? null : children}
               </>
             )}
           </AuthProvider>

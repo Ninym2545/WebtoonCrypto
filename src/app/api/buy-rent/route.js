@@ -20,10 +20,6 @@ export const POST = async (require) => {
   try {
     // Parse the request JSON
     const { ticker, chapter_id, content_id, user_id } = await require.json();
-    console.log("type ---> ", ticker);
-    console.log("chap_id ---> ", chapter_id);
-    console.log("content_id ---> ", content_id);
-    console.log("_id ---> ", user_id);
 
     // Calculate dueDate based on the ticker
     let dueDate;
@@ -31,10 +27,22 @@ export const POST = async (require) => {
       const currentDate = new Date();
       currentDate.setDate(currentDate.getDate() + 3);
       dueDate = currentDate.toISOString();
+
+      var number = 200;
+      var percentage = 40;
+      var result = (percentage / 100) * number;
+      var sum = number - result;
+      console.log("เช่า ---> ", sum);
     } else if (ticker === "ซื้อเก็บ") {
       const currentDate = new Date();
       currentDate.setFullYear(currentDate.getFullYear() + 100);
       dueDate = currentDate.toISOString();
+
+      var number = 400;
+      var percentage = 40;
+      var result = (percentage / 100) * number;
+      var sum = number - result;
+      console.log("เช่า ---> ", sum);
     }
     console.log("วันหมดอายุ ---> ", dueDate);
 
@@ -53,10 +61,12 @@ export const POST = async (require) => {
       content_name: content.title,
       chapter_id: contentfilter._id,
       chapter_name: contentfilter.title,
+      id_creater: content.id_creater,
       type: ticker,
+      price: sum,
     });
     await createBuy_Rent.save();
-    // console.log("create ---> ", createBuy_Rent);
+    console.log('create ---> ', createBuy_Rent);
 
     // Update the user document
     user.buyrent.push({
@@ -65,7 +75,6 @@ export const POST = async (require) => {
       status: ticker,
       exdate: dueDate,
     });
-
 
     let updatedUser;
     if (ticker === "ซื้อเก็บ") {
@@ -82,31 +91,27 @@ export const POST = async (require) => {
         },
         { new: true }
       );
-     
-    }else{
-        updatedUser = await User.findByIdAndUpdate(
-            { _id: user_id },
-            {
-              $inc: {
-                ticker_rent: -1, // Decrement the current value by 1
-              },
-              $set: {
-                buyrent: user.buyrent,
-              },
-            },
-            { new: true }
-          );
+    } else {
+      updatedUser = await User.findByIdAndUpdate(
+        { _id: user_id },
+        {
+          $inc: {
+            ticker_rent: -1, // Decrement the current value by 1
+          },
+          $set: {
+            buyrent: user.buyrent,
+          },
+        },
+        { new: true }
+      );
     }
     // console.log("update ---> ", updatedUser);
     // Return a JSON response
-    return new NextResponse(
-      JSON.stringify(createBuy_Rent),
-      {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    );
+    return new NextResponse(JSON.stringify(createBuy_Rent), {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
   } catch (error) {
     console.error(error);
     return new NextResponse(error.message, {

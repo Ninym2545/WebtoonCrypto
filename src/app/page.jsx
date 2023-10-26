@@ -10,6 +10,7 @@ export const metadata = {
 };
 
 const page = () => {
+  
   return (
     <div className="container">
       <div className={styles.container}>

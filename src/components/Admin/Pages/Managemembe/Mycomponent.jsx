@@ -27,6 +27,10 @@ const MyComponent = () => {
     const [filter, setFilter] = useState();
 
     useEffect(() => {
+
+        if (session?.status === "unauthenticated") {
+            window.location.href = "/";
+          }
         fetch(`/api/evidence`).then(res => res.json()).then(data => {
             const creatorStatus = data.filter((item) => item.status == 'prending');
             setData(creatorStatus)
@@ -216,8 +220,8 @@ const MyComponent = () => {
                                 <Th>อีเมลล์</Th>
                                 <Th>วันที่สมัคร</Th>
                                 <Th >ตำแหน่ง</Th>
-                                <Th >ล็อคอินผ่าน</Th>
-                                <Th isNumeric>จัดการข้อมูล</Th>
+                                <Th isNumeric>ล็อคอินผ่าน</Th>
+                              
                             </Tr>
                         </Thead>
                         <Tbody>
@@ -228,8 +232,8 @@ const MyComponent = () => {
                                         <Td>{user.email}</Td>
                                         <Td> {DateHelper.convertJsDateToSqlDateFormat(new Date(user.createdAt), false)}</Td>
                                         <Td >{user.role}</Td>
-                                        <Td >{user.provider}</Td>
-                                        <Td isNumeric>Delete</Td>
+                                        <Td isNumeric>{user.provider}</Td>
+                                       
 
                                     </Tr>
                                 ))

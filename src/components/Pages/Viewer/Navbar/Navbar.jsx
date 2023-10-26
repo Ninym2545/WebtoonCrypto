@@ -19,69 +19,18 @@ import Link from 'next/link';
 import { useSession } from 'next-auth/react';
 import Swal from 'sweetalert2';
 
- function Navbar({ data, dataimg }) {
+ function Navbar({ Menu, Original ,viewer }) {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const btnRef = useRef()
   const bg = useColorModeValue('white', 'gray.800')
   const session = useSession();
   const router = useRouter();
-  // console.log(data)
+
   // Function to go back to the previous page in history
   const goBack = () => {
-    router.push(`/contents/${data._id}`);
+    router.push(`/contents/${viewer?.contentid}`);
   };
-  const [chapter, setChapter] = useState();
 
-  useEffect(() => {
-    const contents_id = data?._id
-    fetch(`/api/chapter/${contents_id}`) // Make sure this URL is correct
-      .then((res) => {
-        if (!res.ok) {
-          throw new Error(`Network response was not ok: ${res.status}`);
-        }
-        return res.json();
-      })
-      .then((content) => {
-        try {
-            setChapter(content);
-            const user = session?.data?.user.buyrent;
-            // คัดกรองข้อมูลจาก filters ที่ตรงกับ content._id
-            const filters = user.filter((user) => user.content_id === content._id);
-
-            if (filters.length > 0) {
-              // ใช้ filter เพื่อกรอง chapter ที่ตรงกับ contentIds
-              const contentIds = filters.map((filter) => filter.chapter_id);
-              // console.log('filter_status ---> ', filters);
-              const chapterfilter = content.chapter.filter((chap) => contentIds.includes(chap._id));
-              // console.log('filter', chapterfilter);
-              const updatedChapterFilter = chapterfilter.map((chap, index) => ({
-                ...chap,
-                upload: true,
-                status: filters[index].status
-              }));
-              // หาข้อมูลที่มี _id ตรงกันใน data1 และ data2
-              const mergedData = content.chapter.map(item1 => {
-                const matchingItem = updatedChapterFilter.find(item2 => item2._id === item1._id);
-                if (matchingItem) {
-                  return matchingItem; // ใช้ข้อมูลจาก data2
-                }
-                return item1; // ใช้ข้อมูลเดิมจาก data1
-              });
-
-              // ลากตัวแปร mergedData ไปใช้งานต่อ
-              // console.log(mergedData);
-              setChapter(mergedData)
-              // console.log('chapter ---> ', chapter);
-            }
-          
-        } catch (error) {
-          console.log('error', error); 
-        }
-      })
-      .catch((error) => {
-        console.error('Error fetching data:', error);
-      });
-  }, [data]);
 
   useEffect(() => {
     const hiddenElement = document.getElementById('hiddenElement');
@@ -136,9 +85,9 @@ import Swal from 'sweetalert2';
     prevvalue: null
   });
   useEffect(() => {
-    const chapters = chapter;
-    const dataimgId = dataimg?._id;
-  
+    const chapters = Original;
+    const dataimgId = viewer?.id; 
+
     if (chapters && dataimgId) {
       for (let index = 0; index < chapters.length; index++) {
         const value = chapters[index];
@@ -154,79 +103,112 @@ import Swal from 'sweetalert2';
         }
       }
     }
-  }, [chapter, dataimg?._id]);
-
-  const [tickerBuy, setTickerBuy] = useState()
-  const [SelectedChapterId, setSelectedChapterId] = useState()
-  const [tickerRent, setTickerRent] = useState()
-  const rent = 'เช่า'
-  const buy = 'ซื้อเก็บ'
-
-  async function handleCheckchapter(index) {
-    if(session.data?.user){
-      if (index.upload === true) {
-        router.push(`/viewer/${data._id}/${index._id}`)
-      } else {
-        onClose();
-        Swal.fire({
-          icon: 'error',
-          title: 'เกิดข้อผิดพลาด',
-          text: 'คุณยังไม่ได้ซื้อตอนนี้!',
-        }).then((result) => {
-          if (result.isConfirmed) {
-            router.push(`/contents/${data._id}`);
-          }
-        });
-      }
-    }else{
-      router.push('/login')
-    }
-
-  }
- 
   
 
-  const Nextpage = async (index) => {
-    console.log('Prevpage --> ', index._id);
-    console.log('content --> ', chapter);
-    const checkrole = chapter.find((check) => check._id === index._id);
-    console.log('filter ---> ', checkrole);
-    if(checkrole.upload === true){
-       router.push(`/viewer/${data._id}/${index._id}`);
+}, [Original ,viewer]);
+  
+
+
+
+
+  async function handleCheckchapter(chap) {
+    const result =isCanOpen(Menu,chap)
+    console.log('chap' , chap);
+    if(result){
+      router.push(`/viewer/${viewer?.contentid}/${chap._id}`)
     }else{
-      Swal.fire({
-        icon: 'error',
-        title: 'เกิดข้อผิดพลาด',
-        text: 'คุณยังไม่ได้ซื้อตอนนี้!',
-      }).then((result) => {
-        if (result.isConfirmed) {
-          router.push(`/contents/${data._id}`);
-        }
-      });
+      onClose();
+              Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Something went wrong!',
+                footer: '<a href="">Why do I have this issue?</a>'
+              }).then(() => {
+                router.push(`/contents/${viewer?.contentid}`)
+              });
+            
     }
+  }
+
+  const Nextpage = async (index) => {
+    
+    // console.log('Prevpage --> ', index._id);
+      //  console.log('contents --> ', Menu);
+       const checkrole = Original.find((check) => check._id === index._id);
+      //  console.log('filter ---> ', checkrole);
+      const result =isCanOpen(Menu,checkrole)
+        if(result){
+          router.push(`/viewer/${viewer?.contentid}/${index._id}`)
+        }else{
+          onClose();
+                  Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Something went wrong!',
+                    footer: '<a href="">Why do I have this issue?</a>'
+                  }).then(() => {
+                    router.push(`/contents/${viewer?.contentid}`)
+                  });
+                
+        }
+  
   };
    const Prevpage = async (index) => {  
-    console.log('Prevpage --> ', index._id);
-    console.log('content --> ', chapter);
-    const checkrole = chapter.find((check) => check._id === index._id);
-    console.log('filter ---> ', checkrole);
-    if(checkrole.upload === true){
-       router.push(`/viewer/${data._id}/${index._id}`);
-    }else{
-      Swal.fire({
-        icon: 'error',
-        title: 'เกิดข้อผิดพลาด',
-        text: 'คุณยังไม่ได้ซื้อตอนนี้!',
-      }).then((result) => {
-        if (result.isConfirmed) {
-          router.push(`/contents/${data._id}`);
+      //  console.log('Nextpage --> ', index._id);
+      //  console.log('contents --> ', Menu);
+       const checkrole = Original.find((check) => check._id === index._id);
+      //  console.log('filter ---> ', checkrole);
+      const result =isCanOpen(Menu,checkrole)
+        if(result){
+          router.push(`/viewer/${viewer?.contentid}/${index._id}`)
+        }else{
+          onClose();
+                  Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Something went wrong!',
+                    footer: '<a href="">Why do I have this issue?</a>'
+                  }).then(() => {
+                    router.push(`/contents/${viewer?.contentid}`)
+                  });
+                
         }
-      });
-    }
   };
 
-
-
+  const isCanOpen = (Menu, chap) => {
+    // console.log('chap' ,chap);
+    if(chap.upload === true){
+      return true
+    }else{
+      const today = new Date()
+      const chek = Menu.some(order =>
+        order?.chapter_id === chap._id && today < new Date(order.exdate)
+      )
+      return chek
+    }
+   
+  }
+  const displayStatus = (orders, chap) => {
+    const today = new Date()
+    const order = orders?.find(order =>
+      order?.chapter_id === chap._id && today < new Date(order.exdate)
+    )
+    // console.log('displayStatus', order)
+    if (!order) return <></>
+    if (order.status === "เช่า") {
+      return <span className={`rounded-full bg-red-500`}>
+        <span className="px-2 text-white text-md">
+          เช่า
+        </span>
+      </span>
+    } else {
+      return <span className={`rounded-full bg-green-500`}>
+        <span className="px-2 text-white text-md">
+          ซื้อเก็บ
+        </span>
+      </span>
+    }
+  }
 
   return (
     <div className='fixed w-full z-[100]'>
@@ -298,7 +280,9 @@ import Swal from 'sweetalert2';
             {/* <Input placeholder='Type here...' /> */}
             <div className='mt-2'>
               <ul className="flex flex-wrap Episode_episodeItem ">
-                {chapter?.sort((a, b) => b.index - a.index)
+      
+                <>
+                {Original?.sort((a, b) => b.index - a.index)
                   .map((chap) => (
                     <li className="relative  mx-[2px] my-[2px] lg:!w-[calc((97%)/2)] list-none ">
                       <a
@@ -310,22 +294,17 @@ import Swal from 'sweetalert2';
                           <div className="overflow-hidden  inset-0">
                             <picture className="flex w-full h-full">
                             <div className='absolute z-30 p-2 '>
-                                {chap.status && (
-                                  <span className={`rounded-full ${chap.status === 'เช่า' ? 'bg-red-500' : 'bg-green-500'}`}>
-                                    <span className="px-2 text-white text-sm">
-                                      {chap.status === undefined ? <></> : chap.status}
-                                    </span>
-                                  </span>
-                                )}
-                                {chap.upload === true && chap.status === undefined ?
-                                   <span className="rounded-full bg-gray-100">
-                                   <span className="px-2 text-black text-sm">
-                                     ฟรี
-                                   </span>
-                                 </span> 
-                                  :
-                                   <></>}
-
+                            {
+                            displayStatus(Menu, chap)
+                            }
+                            {chap.upload === true && chap.status === undefined ?
+                            <span className="rounded-full bg-gray-100">
+                              <span className="px-2 text-black text-md">
+                                ฟรี
+                              </span>
+                            </span>
+                            :
+                            <></>}
                               </div>
                               <img
                                 src={chap.img}
@@ -347,6 +326,7 @@ import Swal from 'sweetalert2';
                       </a>
                     </li>
                   ))}
+                </>        
               </ul>
             </div>
 

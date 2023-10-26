@@ -32,6 +32,14 @@ const buy_renrSchema = new Schema({
         type: String,
         required: true,
     },
+    id_creater:{
+        type: ObjectId,
+        ref: 'contetnts',
+        required: true,
+    },
+    price:{
+        type: Number
+    },
     type:{
         type: String,
         required: true,

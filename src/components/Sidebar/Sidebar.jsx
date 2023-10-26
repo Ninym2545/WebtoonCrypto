@@ -38,14 +38,14 @@ import {
 } from 'react-icons/fi'
 import { AiOutlineAppstoreAdd } from 'react-icons/ai'
 import { FaBook } from 'react-icons/fa'
-import { useSession } from 'next-auth/react'
+import { signOut, useSession } from 'next-auth/react'
 import { MoonIcon, SunIcon } from '@chakra-ui/icons'
 
 const LinkItems = [
   { name: 'หน้าแรก', icon: FiHome, url: '/creator' },
   { name: 'สร้างผลงาน', icon: AiOutlineAppstoreAdd, url: '/creator/createcontent' },
   { name: 'ผลงานของฉัน', icon: FaBook, url: '/creator/mycontents' },
-  { name: 'คู่มือ', icon: FiBook, url: '#' },
+  
 ]
 const LinkItemsAdmin = [
   { name: 'หน้าแรก', icon: FiHome, url: '/admin' },
@@ -202,7 +202,7 @@ const MobileNav = ({ onOpen, ...rest }) => {
                 <MenuItem display={{ base: 'none', md: 'inline-flex' }} >กลับสู่หน้าหลัก</MenuItem>
               </Link>
               <MenuDivider />
-              <MenuItem>ออกจากระบบ</MenuItem>
+              <MenuItem onClick={signOut}>ออกจากระบบ</MenuItem>
             </MenuList>
           </Menu>
         </Flex>

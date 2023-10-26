@@ -4,6 +4,7 @@ import Navbar from './Navbar/Navbar';
 import Header from './Header/Header';
 import Chapter from './Chapter/Chapter';
 
+
 async function getData(id) {
   const res = await fetch(`http://localhost:3000/api/showcontents/${id}`, {
     cache: "no-store",
@@ -19,7 +20,7 @@ async function getData(id) {
 
 const Mycomponent = async ({content_id}) => {
   const data = await getData(content_id);
-
+  
   return (
     <>
      <Navbar data={data} />

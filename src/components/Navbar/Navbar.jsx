@@ -362,5 +362,11 @@ const NAV_ITEMS = [
     {
         label: 'หมวดหมู่',
         href: '/category',
+        children: [
+          {
+            label: 'ค้นหาการ์ตูน',
+            href: '/searchcontents',
+          }
+        ],
     },
 ]
