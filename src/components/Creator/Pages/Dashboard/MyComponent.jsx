@@ -221,7 +221,7 @@ const MyComponent = () => {
     const Wallet = e.target[0].value;
     const Coin = e.target[1].value;
     const user_id = session.data?.user._id
-    if(Coin > 3600 && Coin <= totalCash ){
+    if(Coin => 3600 || Coin <= totalCash ){
       try {
         const res = await fetch("../api/withdraw", {
           method: "POST",
