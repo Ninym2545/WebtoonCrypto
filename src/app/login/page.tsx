@@ -61,7 +61,7 @@ const page = () => {
                   onClick={() => signIn("google", { callbackUrl: "/" })}
                   className="border-2 border-gray-200 rounded-full p-2 mx-1"
                 >
-                  <Image src={Google} alt="" className="w-9 h-9" />
+                  <img src='google.png' alt="" className="w-9 h-9" />
                 </button>
               </div>
               <p className="text-gray-400 my-3">or use your email account</p>
