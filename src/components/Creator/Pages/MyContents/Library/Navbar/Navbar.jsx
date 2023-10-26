@@ -3,7 +3,6 @@ import React, { FC, useEffect, useState } from "react";
 import styles from "./Navbar.module.css";
 import { Box, useColorModeValue } from "@chakra-ui/react";
 
-
 const WT_Category = [
     { typewt: { en: 'romancefan', th: 'โรแมนซ์แฟนตาซี' } },
     { typewt: { en: 'romance', th: 'โรแมนซ์' } },
@@ -14,30 +13,15 @@ const WT_Category = [
 
 ];
 
-async function getData() {
-    const res = await fetch("http://localhost:3000/api/category", {
-        cache: "no-store",
-    });
-
-    if (!res.ok) {
-        throw new Error("Failed to fetch data");
-    }
-
-    return res.json();
-}
-
 const Navbar = ({ settypewt, typewt }) => {
     const bg = useColorModeValue('white', 'gray.800')
     const [categorys, setcategorys] = useState([
     ]);
 
     useEffect(() => {
-        const data = getData().then(value => {
-      
-
-            setcategorys(value);
-        });
-
+        fetch(`/api/category`)
+        .then((response) => response.json())
+        .then((data) => setcategorys(data));
        
     }, []);
 
