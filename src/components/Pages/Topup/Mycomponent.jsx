@@ -15,17 +15,6 @@ import Web3 from "web3";
 import { ToastContainer, toast } from "react-toastify";
 // import * as Omise from 'omise';
 import CONTRACT_ABI from "../../../utils/Contract/busd-abi.json";
-async function getData() {
-    const res = await fetch("http://localhost:3000/api/rate", {
-        cache: "no-store",
-    });
-
-    if (!res.ok) {
-        throw new Error("Failed to fetch data");
-    }
-
-    return res.json();
-}
 
 
 const Mycomponent = () => {
@@ -36,7 +25,7 @@ const Mycomponent = () => {
     const payment = useColorModeValue('white', 'gray.500')
     const form = useColorModeValue('gray.100', 'gray.600')
 
-
+   
 
     let omiseCard;
     async function handleloadscript() {
@@ -137,12 +126,11 @@ const Mycomponent = () => {
     ]);
 
     useEffect(() => {
-        const data = getData().then(value => {
-            console.log("data : ", value);
-            setRate(value);
-        });
+        fetch(`/api/rate`)
+        .then((response) => response.json())
+        .then((data) => setRate(data));
+    },[])
 
-    }, []);
 
     const [dataselect, setdataselect] = useState();
     let [creditprice, setCreditPrice] = useState();
