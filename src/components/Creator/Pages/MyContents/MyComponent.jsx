@@ -162,6 +162,7 @@ const MyComponent = () => {
         confirmButtonText: 'แก้ไขผลงาน'
       }).then((result) => {
         if (result.isConfirmed) {
+          console.log('sentData');
           const res = uploadchapter(formData, formDataImg, chapternumber, title, dataselect , isSwitchOn);
 
           if (res?.msg) alert('Update Content success')
