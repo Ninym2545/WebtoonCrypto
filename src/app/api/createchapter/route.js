@@ -162,7 +162,7 @@ export async function uploadchapter(formData, formDataImg, chapternumber, title,
     const contentsid = await Contents.findById({
       _id: _id,
     });
-
+    console.log('hello' , contentsid);
     contentsid.chapter = [
       ...contentsid.chapter,
       {
