@@ -24,7 +24,7 @@ const page = () => {
           <button className={styles.button}>อ่านเลย</button>
         </div>
         <div className={styles.item}>
-          <Image src={lycoris} alt="" className={styles.img} />
+          <img src='lycoris.png' alt="" className={styles.img} />
         </div>
       </div>
     </div>

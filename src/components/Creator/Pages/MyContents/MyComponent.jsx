@@ -71,13 +71,9 @@ const MyComponent = () => {
 
   const [dataselect, setdataselect] = useState();
   const [dataselectEdit, setdataselectEdit] = useState();
-  const [dataselectChapter, setdataselectChapter] = useState();
   const [dataImg, setdataImg] = useState();
   const [data, setData] = useState();
-  const fetcher = (...args) => fetch(...args).then((res) => res.json());
-
-
-
+ 
   useEffect(() => {
     if (session?.status === "unauthenticated") {
       window.location.href = "/";
@@ -88,11 +84,7 @@ const MyComponent = () => {
         setData(data)
         console.log('data ---> ', data);
       })
-    }, 4000);
-    
-
-
-    
+    }, 4000);   
   }, [])
 
   async function selectdata(e) {
@@ -220,7 +212,6 @@ const MyComponent = () => {
 
   };
 
- 
 
   const [update, setUpdate] = useState();
   async function handleDeleteChapter(_id) {
