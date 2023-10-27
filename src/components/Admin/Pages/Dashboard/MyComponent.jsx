@@ -250,7 +250,7 @@ const MyComponent = () => {
                 <Tbody>
                   {
                     withdraw?.map((history) => (
-                      <Tr>
+                      <Tr key={history._id}>
                         <Td>{DateHelper.convertJsDateToSqlDateFormat(new Date(history.createdAt), false)}</Td>
                         <Td >{history.user_id}</Td>
                         <Td >{history.status}</Td>
@@ -294,7 +294,7 @@ const MyComponent = () => {
                   <Tbody>
                     {
                       contents?.map((content) => (
-                        <Tr>
+                        <Tr key={content._id}>
                           <Td>{content.title}</Td>
                           <Td isNumeric>{content.chapter.length}</Td>
                           <Td isNumeric>{content.creater_name}</Td>
@@ -335,13 +335,13 @@ const MyComponent = () => {
                   </Thead>
                   <Tbody>
                     {
-                      history?.map((history) => (
-                        <Tr>
-                          <Td>{DateHelper.convertJsDateToSqlDateFormat(new Date(history.createdAt), false)}</Td>
-                          <Td >{history.coin.toLocaleString()}</Td>
-                          <Td >{history.price.toLocaleString()}</Td>
-                          <Td >{history.txHash ? 'Metamask' : 'บัตรเครดิต'}</Td>
-                          <Td isNumeric>{history.user_name}</Td>
+                      history?.map((historys) => (
+                        <Tr key={historys._id}>
+                          <Td>{DateHelper.convertJsDateToSqlDateFormat(new Date(historys.createdAt), false)}</Td>
+                          <Td >{historys.coin.toLocaleString()}</Td>
+                          <Td >{historys.price.toLocaleString()}</Td>
+                          <Td >{historys.txHash ? 'Metamask' : 'บัตรเครดิต'}</Td>
+                          <Td isNumeric>{historys.user_name}</Td>
                         </Tr>
                       ))
                     }

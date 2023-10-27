@@ -33,7 +33,7 @@ const Navbar = ({ settypewt, typewt }) => {
                 <ul className={styles.ulrank}>
                     {
                         categorys.map(category => (
-                            <li className={`${styles.lirank}  ${category.category.th === typewt ? "liactionrank" : ""}`} >
+                            <li key={category._id} className={`${styles.lirank}  ${category.category.th === typewt ? "liactionrank" : ""}`} >
                                 <button className={styles.lirank} onClick={() => { settypewt(category.category.th) }} ><p className={styles.links}>{category.category.th}</p></button>
                             </li>
                         ))

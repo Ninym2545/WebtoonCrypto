@@ -203,7 +203,7 @@ const Chapter = ({ webtoon }) => {
         <ul className="flex flex-wrap Episode_episodeItem ">
           <>
             {originaChapters?.sort((a, b) => b.index - a.index).map((chap) => (
-              <li className="relative  mx-[2px] my-[2px] lg:!w-[calc((98.3%-3px)/6)] md:!w-[calc((98%-3px)/5)]">
+              <li key={chap._id} className="relative  mx-[2px] my-[2px] lg:!w-[calc((98.3%-3px)/6)] md:!w-[calc((98%-3px)/5)]">
                 <a
                   className="flex flex-none flex-col h-full relative  overflow-hidden"
                   onClick={() => handleCheckchapter(chap)}

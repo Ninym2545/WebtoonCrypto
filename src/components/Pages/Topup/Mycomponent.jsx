@@ -320,7 +320,7 @@ const Mycomponent = () => {
                         <ul class=" flex flex-wrap gap-4 content-start m-5">
                             {
                                 rate.map((rate) => (
-                                    <li className='flex-[calc((90%)/2)]'>
+                                    <li key={rate._id} className='flex-[calc((90%)/2)]'>
                                         <input onChange={selectdata} type="radio" id={rate.coin} name="hosting" value={rate.coin} class="hidden peer" required />
                                         <label for={rate.coin} class="ratetheme dark:peer-checked:text-blue-500 peer-checked:border-blue-600 peer-checked:text-blue-600 hover:text-gray-600 dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700 ">
                                             <div class="block">

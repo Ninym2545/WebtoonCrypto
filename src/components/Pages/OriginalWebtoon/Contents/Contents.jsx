@@ -24,7 +24,7 @@ const Content =  () => {
     <div className={styles.cartoon}>
       <div className={styles.card}>
         {WT_Categoryweek.map((day) => (
-          <div className={styles.daysection} id={day.en}>
+          <div key={day.indexd} className={styles.daysection} id={day.en}>
             <h2 className={styles.header}>วัน{day.th}</h2>
 
             <div className={styles.grid}>

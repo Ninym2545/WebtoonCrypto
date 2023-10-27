@@ -212,7 +212,7 @@ const MobileNav = ({ onOpen, ...rest }) => {
 }
 
 const Sidebar = ({ children }) => {
-  const { isOpen, onOpen, onClose } = useDisclosure()
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (
     <Box minH="100vh" bg={useColorModeValue('gray.100', 'gray.900')}>
@@ -235,7 +235,8 @@ const Sidebar = ({ children }) => {
         {children}
       </Box>
     </Box>
-  )
+  );
 }
+
 
 export default Sidebar

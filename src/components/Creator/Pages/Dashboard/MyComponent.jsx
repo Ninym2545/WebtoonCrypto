@@ -349,7 +349,7 @@ const MyComponent = () => {
                 <Tbody>
                   {
                     withdraw?.map((withdraw) => (
-                      <Tr>
+                      <Tr key={withdraw._id}>
                         <Td>{DateHelper.convertJsDateToSqlDateFormat(new Date(withdraw.createdAt), false)}</Td>
                         <Td isNumeric>{withdraw.status}</Td>
                       </Tr>
@@ -386,7 +386,7 @@ const MyComponent = () => {
                   <Tbody>
                     {
                       contents?.map((content) => (
-                        <Tr>
+                        <Tr key={content._id}>
                           <Td>{content.title}</Td>
                           <Td isNumeric>{content.chapter.length}</Td>
                         </Tr>
@@ -424,7 +424,7 @@ const MyComponent = () => {
                   <Tbody>
                     {
                       history?.map((history) => (
-                        <Tr>
+                        <Tr key={history._id}>
                           <Td>{DateHelper.convertJsDateToSqlDateFormat(new Date(history.createdAt), false)}</Td>
                           <Td isNumeric>{history.coin.toLocaleString()}</Td>
                           <Td isNumeric>{history.price.toLocaleString()}</Td>

@@ -10,7 +10,7 @@ import { useState } from 'react';
 import { useRouter, useSearchParams } from  "next/navigation"
 
 
-const page = () => {
+const Page = () => {
 
     const [error, setError] = useState(false);
     const router = useRouter();
@@ -117,4 +117,4 @@ const page = () => {
     )
 }
 
-export default page
+export default Page

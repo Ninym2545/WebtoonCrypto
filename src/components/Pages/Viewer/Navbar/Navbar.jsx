@@ -284,7 +284,7 @@ import Swal from 'sweetalert2';
                 <>
                 {Original?.sort((a, b) => b.index - a.index)
                   .map((chap) => (
-                    <li className="relative  mx-[2px] my-[2px] lg:!w-[calc((97%)/2)] list-none ">
+                    <li key={chap._id} className="relative  mx-[2px] my-[2px] lg:!w-[calc((97%)/2)] list-none ">
                       <a
                         className="flex flex-none flex-col h-full relative  overflow-hidden"
                         // href={`/viewer/${webtoon}/${chap._id}`}

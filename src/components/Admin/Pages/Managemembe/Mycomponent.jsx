@@ -227,7 +227,7 @@ const MyComponent = () => {
                         <Tbody>
                             {
                                 filter?.map((user) => (
-                                    <Tr>
+                                    <Tr key={user._id}>
                                         <Td>{user.name}</Td>
                                         <Td>{user.email}</Td>
                                         <Td> {DateHelper.convertJsDateToSqlDateFormat(new Date(user.createdAt), false)}</Td>

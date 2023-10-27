@@ -49,7 +49,8 @@ export default function RootLayout({ children }) {
                 {shownav ? (
                   <></>
                 ) : nav ? (
-                  <Sidebar children={children} />
+                  // <Sidebar children={children} />
+                  <Sidebar>{children}</Sidebar>
                 ) : (
                   <WithSubnavigation />
                 )}

@@ -11,7 +11,7 @@ import Script from 'next/script'
 import Swal from 'sweetalert2'
 import Metamask from "../../../assets/MetaMask_Fox.svg.png";
 import Image from 'next/image';
-import { createEvidence } from '@/app/api/evidence/route';
+import { createEvidence } from '../../../app/actions/UploadEvidence';
 
 
 

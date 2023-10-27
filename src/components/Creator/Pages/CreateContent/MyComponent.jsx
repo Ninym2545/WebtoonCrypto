@@ -24,7 +24,7 @@ import {
 } from '@chakra-ui/react'
 import { Checkbox, CheckboxGroup } from '@chakra-ui/react'
 import { ChevronDownIcon } from '@chakra-ui/icons'
-import { updatecontents, uploadcontents } from '@/app/api/createcontent/route'
+import { updatecontents, uploadcontents } from '../../../../app/actions/UploadContentAction'
 import { useSession } from 'next-auth/react'
 import Swal from 'sweetalert2'
 import { useRouter } from 'next/navigation'
@@ -647,7 +647,7 @@ const MyComponent = () => {
                     {isLoading
                         ? "loading"
                         : data?.map((content) => (
-                          <option >{content.title}</option>
+                          <option key={content._id} >{content.title}</option>
 
                         ))}
                     </Select>

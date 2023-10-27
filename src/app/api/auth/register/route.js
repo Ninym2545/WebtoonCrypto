@@ -27,12 +27,11 @@ export const POST = async (request) => {
       email: email
     })
 
-     if(userExist) return {message: 'Verify Success!'}
+     if(userExist){
+       const newUser = new User({name: name, email: email, password: pass})
+       await newUser.save();
 
-     const newUser = new User({name: name, email: email, password: pass})
-
-
-     await newUser.save();
+     }
 
     return new NextResponse("User has been created", {
       status: 201,

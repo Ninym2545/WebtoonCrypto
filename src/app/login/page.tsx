@@ -12,7 +12,7 @@ import Image from "next/image";
 import pika from '../../assets/download.gif'
 
 
-const page = () => {
+const Page = () => {
   const session = useSession();
   const router = useRouter();
   const params = useSearchParams();
@@ -122,4 +122,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;

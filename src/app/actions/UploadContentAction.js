@@ -1,7 +1,5 @@
 "use server"
-import { NextResponse } from "next/server";
-import Webtoon from "../../../models/Content";
-
+import Webtoon from "../../models/Content";
 
 import path, { resolve } from 'path'
 import fs from 'fs/promises'

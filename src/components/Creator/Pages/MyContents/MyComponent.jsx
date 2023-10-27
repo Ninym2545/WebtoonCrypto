@@ -9,7 +9,7 @@ import Navbar from './Library/Navbar/Navbar'
 import Content from './Library/Content/Contents'
 import useSWR from 'swr';
 import { useSession } from 'next-auth/react'
-import { uploadchapter } from '../../../../app/api/createchapter/route'
+import { uploadchapter } from '../../../../app/actions/UploadAction'
 import Photocardpreview from './Photocardpreview'
 import PreviewDataImg from './PreviewDataImg'
 import {
@@ -25,6 +25,7 @@ import {
 } from '@chakra-ui/react'
 import Swal from 'sweetalert2'
 import { useRouter } from 'next/navigation'
+import { revalidatePath } from 'next/cache'
 
 const MyComponent = () => {
   const session = useSession();
@@ -165,39 +166,39 @@ const MyComponent = () => {
           console.log('sentData');
           const res = await uploadchapter(formData, formDataImg, chapternumber, title, dataselect , isSwitchOn);
 
-          if (res?.msg) console.log('Update Content success')
-          let timerInterval
-          Swal.fire({
-            title: "กำลังสร้างการ์ตูน",
-            timer: 3000,
-            didOpen: () => {
-              Swal.showLoading()
-            },
-            willClose: () => {
-              clearInterval(timerInterval)
-            }
-          }).then((result) => {
-            /* Read more about handling dismissals below */
-            if (result.dismiss === Swal.DismissReason.timer) {
-              Swal.fire({
-                position: 'center',
-                icon: 'success',
-                title: 'แก้ไขผลงานสำเร็จ',
-                showConfirmButton: false,
-                timer: 3000
-              })
-                 // เมื่อโหลดข้อมูลเสร็จแล้วทำการล้างข้อมูลอื่น ๆ และรีเซ็ตฟอร์ม
-                 setFiles([]);
-                 setFileImgs([]);
-                 formRef.current.reset();
-                 fetch(`/api/contents/${session.data?.user._id}`)
-                 .then((response) => response.json())
-                 .then((data) => setData(data));
-            }
-
-
-          })
-          if (res?.errMsg) alert(`Error: ${res?.errMsg}`)
+          if (res){
+            console.log('res --> ', res);
+            let timerInterval
+            Swal.fire({
+              title: "กำลังสร้างการ์ตูน",
+              timer: 3000,
+              didOpen: () => {
+                Swal.showLoading()
+              },
+              willClose: () => {
+                clearInterval(timerInterval)
+              }
+            }).then((result) => {
+              /* Read more about handling dismissals below */
+              if (result.dismiss === Swal.DismissReason.timer) {
+                Swal.fire({
+                  position: 'center',
+                  icon: 'success',
+                  title: 'แก้ไขผลงานสำเร็จ',
+                  showConfirmButton: false,
+                  timer: 3000
+                })
+                   // เมื่อโหลดข้อมูลเสร็จแล้วทำการล้างข้อมูลอื่น ๆ และรีเซ็ตฟอร์ม
+                   setFiles([]);
+                   setFileImgs([]);
+                   formRef.current.reset();
+                   fetch(`/api/contents/${session.data?.user._id}`)
+                   .then((response) => response.json())
+                   .then((data) => setData(data));
+              }
+            })
+          }
+          // revalidatePath("/")
         }
       })
 
@@ -293,7 +294,7 @@ const MyComponent = () => {
                     <Text fontSize='xl'>ชื่อซีรี่ส์</Text>
                     <Select placeholder='ชื่อซีรี่ส์' my={'2'} onChange={selectdata} >
                       {data?.map((content) => (
-                        <option >{content.title}</option>
+                        <option key={content._id} >{content.title}</option>
 
                       ))}
 
@@ -361,7 +362,7 @@ const MyComponent = () => {
 
                                     {
                                       fileImgs.map((file, index) => (
-                                        <div className='flex items-center justify-center '>
+                                        <div key={index} className='flex items-center justify-center '>
                                           <div className='w-full'>
                                             <Photocardpreview key={index} url={URL.createObjectURL(file)} onClicks={() => handleDeleteFileDataImg(index)} />
                                           </div>
@@ -417,7 +418,7 @@ const MyComponent = () => {
                         </Thead>
                         <Tbody>
                           {dataselectEdit?.chapter?.map((content) => (
-                            <Tr>
+                            <Tr key={content._id}>
                               <Td>{content.title}</Td>
                               <Td >{content.index}</Td>
                               <Td isNumeric><IoTrashBin onClick={() => handleDeleteChapter(content._id)} className='ml-auto mr-3 w-6 h-8 text-red-600' /></Td>
@@ -438,7 +439,7 @@ const MyComponent = () => {
                         {
 
                           dataselectEdit?.chapter.map((content) => (
-                            <option value={content._id}>{content.title}</option>
+                            <option key={content._id} value={content._id}>{content.title}</option>
                           ))}
                       </Select> : <Select placeholder='ชื่อตอน' my={'2'} disabled>
 
@@ -453,7 +454,7 @@ const MyComponent = () => {
                             <div className='flex flex-col items-center justify-center   object-scale-down p-6 border-t border-solid border-slate-200'>
 
                               {dataImg?.data_img.map((dataimg) => (
-                                <img src={dataimg.url} />
+                                <img key={dataimg._id} src={dataimg.url} />
                               ))
                               }
                             </div>
