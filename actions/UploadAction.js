@@ -102,50 +102,50 @@ export async function uploadChapter(
   try {
     await connect();
     const _id = dataselect._id;
-
     // Save photo files to temp folder
-    const newFiles = await saveChapterToLocal(formData);
+    const newFiles = await saveChapterToLocal(formData)
     const photos = await uploadChapterToCloudinary(newFiles);
     // Delete photo files in temp folder after successful upload
-    newFiles.forEach(async (file) => await fs.unlink(file.filepath));
+    newFiles.map((file) => fs.unlink(file.filepath));
 
     // Save photo files to temp folder
     const newFilesImgs = await savePhotosToLocalDataImgs(formDataImg);
     const dataImg = await uploadPhotoToCloudinaryDataImgs(newFilesImgs);
-    newFilesImgs.forEach(async (file) => await fs.unlink(file.filepath));
+    newFilesImgs.map((file) => fs.unlink(file.filepath));
 
-    const imgchapter = photos.map((img) => img.url);
+    const imgchapter = photos.map((img) => {
+      const pos = img.url;
+      return pos;
+    });
 
-    const contentsid = await Contents.findById({ _id: _id });
-    console.log("hello", contentsid);
+    // await deley(2000)
 
-    contentsid.chapter = [
-      ...contentsid.chapter,
-      {
-        title: title,
-        index: chapternumber,
-        img: imgchapter,
-        upload: isSwitchOn,
-        data_img: dataImg.map((img) => ({
-          name: img.public_id,
-          url: img.secure_url,
-        })),
-      },
-    ];
+    const contentsid = await Contents.findById(_id);
+    if (!contentsid) {
+      throw new Error("Content not found"); // Handle this error case appropriately
+    }
 
-    await Contents.findByIdAndUpdate(
-      {
-        _id: _id,
-      },
-      { chapter: contentsid.chapter }
-    );
+    // Modify the contentsid.chapter array
+    contentsid.chapter.push({
+      title: title,
+      index: chapternumber,
+      img: imgchapter, // No need for interpolation here
+      upload: isSwitchOn,
+      data_img: dataImg.map((img) => ({
+        name: img.public_id,
+        url: img.secure_url,
+      })),
+    });
 
-    revalidatePath("/");
+    await contentsid.save();
+
+
+    revalidatePath("/")
     console.log("Create ChapterContent Success.!", contentsid);
-    return { msg: 'Upload Success!' };
+    return {msg: 'Upload Success!'}
   } catch (error) {
-    console.error(error);
-    return { errMsg: error.message };
+    console.log(error);
+    return {errMsg: error.message}
   }
 }
 
