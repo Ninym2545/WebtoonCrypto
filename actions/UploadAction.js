@@ -8,7 +8,6 @@ import cloudinary from "cloudinary";
 import Contents from "@/models/Content";
 import connect from "@/utils/db";
 import { revalidatePath } from "next/cache";
-import { NextResponse } from "next/server";
 
 cloudinary.config({
   cloud_name: process.env.CLOUD_NAME,
@@ -103,27 +102,21 @@ export async function uploadChapter(
   try {
     await connect();
     const _id = dataselect._id;
+
     // Save photo files to temp folder
-    const newFiles = await saveChapterToLocal(formData)
+    const newFiles = await saveChapterToLocal(formData);
     const photos = await uploadChapterToCloudinary(newFiles);
     // Delete photo files in temp folder after successful upload
-    newFiles.map((file) => fs.unlink(file.filepath));
+    newFiles.forEach(async (file) => await fs.unlink(file.filepath));
 
     // Save photo files to temp folder
     const newFilesImgs = await savePhotosToLocalDataImgs(formDataImg);
     const dataImg = await uploadPhotoToCloudinaryDataImgs(newFilesImgs);
-    newFilesImgs.map((file) => fs.unlink(file.filepath));
+    newFilesImgs.forEach(async (file) => await fs.unlink(file.filepath));
 
-    const imgchapter = photos.map((img) => {
-      const pos = img.url;
-      return pos;
-    });
+    const imgchapter = photos.map((img) => img.url);
 
-    // await deley(2000)
-
-    const contentsid = await Contents.findById({
-      _id: _id,
-    });
+    const contentsid = await Contents.findById({ _id: _id });
     console.log("hello", contentsid);
 
     contentsid.chapter = [
@@ -131,11 +124,11 @@ export async function uploadChapter(
       {
         title: title,
         index: chapternumber,
-        img: `${imgchapter}`,
+        img: imgchapter,
         upload: isSwitchOn,
         data_img: dataImg.map((img) => ({
           name: img.public_id,
-          url: img.secure_url ,
+          url: img.secure_url,
         })),
       },
     ];
@@ -147,12 +140,12 @@ export async function uploadChapter(
       { chapter: contentsid.chapter }
     );
 
-    revalidatePath("/")
+    revalidatePath("/");
     console.log("Create ChapterContent Success.!", contentsid);
-    return {msg: 'Upload Success!'}
+    return { msg: 'Upload Success!' };
   } catch (error) {
-    console.log(error);
-    return {errMsg: error.message}
+    console.error(error);
+    return { errMsg: error.message };
   }
 }
 
