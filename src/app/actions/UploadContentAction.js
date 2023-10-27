@@ -318,7 +318,6 @@ export async function deleteContent(_id){
       //  await Promise.all([
       //   Webtoon.deleteOne({_id})
       //  ])
-       revalidatePath("/")
        return {msg: 'Delete Success'}
 
   }catch(error){

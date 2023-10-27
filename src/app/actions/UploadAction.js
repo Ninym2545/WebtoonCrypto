@@ -1,4 +1,4 @@
-"use server";
+"use server"
 
 import path, { resolve } from "path";
 import fs from "fs/promises";
@@ -144,7 +144,7 @@ export async function uploadchapter(
     );
 
     console.log("create chapter complete", contentsid);
-    revalidatePath('/')
+
     return { msg: "Upload Success" };
   } catch (error) {
     console.log(error);

@@ -99,7 +99,7 @@ export async function createEvidence(user , formDataContent, formData){
         console.log('create succress', newEvidence);
   
       //  await delay(5000)
-      revalidatePath("/")
+
       return {msg: 'Upload Success'}
   
   }catch(error){
