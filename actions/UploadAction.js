@@ -20,11 +20,12 @@ async function saveChapterToLocal(formData) {
   try {
     const files = formData.getAll("files");
 
-    const multipleBuffersPromise = files.map((file) =>
-      file.arrayBuffer().then((data) => {
-        const buffer = Buffer.from(data);
-        const name = uuidv4();
-        const ext = file.type.split("/")[1];
+    const multipleBuffersPromise = files.map(file => (
+      file.arrayBuffer()
+      .then(data => {
+        const buffer = Buffer.from(data)
+        const name = uuidv4()
+        const ext = file.type.split("/")[1]
 
         const tempdir = os.tmpdir();
         const uploadDir = path.join(tempdir, `/${file.name}.${ext}`);
@@ -32,7 +33,7 @@ async function saveChapterToLocal(formData) {
         fs.writeFile(uploadDir, buffer);
         return { filepath: uploadDir, filename: file.name };
       })
-    );
+    ))
     return await Promise.all(multipleBuffersPromise);
   } catch (error) {
     console.log("error ---> ", error);
@@ -87,7 +88,11 @@ async function uploadPhotoToCloudinaryDataImgs(newFilesImgs) {
   return await Promise.all(multiplePhotosPromise);
 }
 
-export async function uploadchapter(
+const deley = (delayInms) => {
+  return new Promise(resolve => setTimeout(resolve, delayInms));
+}
+
+export async function uploadChapter(
   formData,
   formDataImg,
   chapternumber,
@@ -99,23 +104,22 @@ export async function uploadchapter(
     await connect();
     const _id = dataselect._id;
     // Save photo files to temp folder
-    const newFiles = await saveChapterToLocal(formData);
-    //  console.log(newFiles)
+    const newFiles = await saveChapterToLocal(formData)
     const photos = await uploadChapterToCloudinary(newFiles);
     // Delete photo files in temp folder after successful upload
     newFiles.map((file) => fs.unlink(file.filepath));
 
     // Save photo files to temp folder
     const newFilesImgs = await savePhotosToLocalDataImgs(formDataImg);
-    //  console.log(newFiles)
     const dataImg = await uploadPhotoToCloudinaryDataImgs(newFilesImgs);
-    // Delete photo files in temp folder after successful upload
     newFilesImgs.map((file) => fs.unlink(file.filepath));
 
     const imgchapter = photos.map((img) => {
       const pos = img.url;
       return pos;
     });
+
+    // await deley(2000)
 
     const contentsid = await Contents.findById({
       _id: _id,
@@ -131,12 +135,11 @@ export async function uploadchapter(
         upload: isSwitchOn,
         data_img: dataImg.map((img) => ({
           name: img.public_id,
-          url: img.url,
+          url: img.secure_url ,
         })),
       },
     ];
 
-    // console.log("update",contentsid)
     await Contents.findByIdAndUpdate(
       {
         _id: _id,
@@ -144,17 +147,15 @@ export async function uploadchapter(
       { chapter: contentsid.chapter }
     );
 
-    console.log("create chapter complete", contentsid);
-
-    return new NextResponse(JSON.stringify(contentsid), {
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+    revalidatePath("/")
+    console.log("Create ChapterContent Success.!", contentsid);
+    return {msg: 'Upload Success!'}
   } catch (error) {
     console.log(error);
-    return new NextResponse(error.message, {
-      status: 500,
-    });
+    return {errMsg: error.message}
   }
+}
+
+export async function revalidate(path){
+  revalidatePath(path)
 }

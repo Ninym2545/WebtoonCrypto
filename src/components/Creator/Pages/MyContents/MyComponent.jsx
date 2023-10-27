@@ -9,7 +9,7 @@ import Navbar from './Library/Navbar/Navbar'
 import Content from './Library/Content/Contents'
 import useSWR from 'swr';
 import { useSession } from 'next-auth/react'
-import { uploadchapter } from '../../../../app/actions/UploadAction'
+import { revalidate, uploadChapter } from '../../../../../actions/UploadAction'
 import Photocardpreview from './Photocardpreview'
 import PreviewDataImg from './PreviewDataImg'
 import {
@@ -25,17 +25,19 @@ import {
 } from '@chakra-ui/react'
 import Swal from 'sweetalert2'
 import { useRouter } from 'next/navigation'
-import { revalidatePath } from 'next/cache'
 
 const MyComponent = () => {
   const session = useSession();
   const bg = useColorModeValue('white', 'gray.700')
   const route = useRouter();
   const formRef = useRef();
+  //img chapter
   const [files, setFiles] = useState([]);
+  //img dataimg
   const [fileImgs, setFileImgs] = useState([]);
   const [typewt, settypewt] = useState("โรแมนซ์แฟนตาซี");
-  // --- image photo fg --- //
+
+  // --- image photo Chapter --- //
   async function handleInputFiles(e) {
     const files = e.target.files;
 
@@ -51,7 +53,7 @@ const MyComponent = () => {
     setFiles(newFiles)
 
   }
-
+  // --- image photo Dataimg --- //
   async function handleInputFilesDataImg(e) {
     const fileImgs = e.target.files;
 
@@ -63,7 +65,6 @@ const MyComponent = () => {
 
     setFileImgs(prev => [...newFileImgs, ...prev])
   }
-
   async function handleDeleteFileDataImg(index) {
     const newFileImgs = fileImgs.filter((_, i) => i !== index)
     setFileImgs(newFileImgs)
@@ -74,18 +75,18 @@ const MyComponent = () => {
   const [dataselectEdit, setdataselectEdit] = useState();
   const [dataImg, setdataImg] = useState();
   const [data, setData] = useState();
- 
+
   useEffect(() => {
     if (session?.status === "unauthenticated") {
       window.location.href = "/";
     }
-    
+
     setTimeout(() => {
       fetch(`/api/contents/${session.data?.user._id}`).then(res => res.json()).then(data => {
         setData(data)
         console.log('data ---> ', data);
       })
-    }, 4000);   
+    }, 4000);
   }, [])
 
   async function selectdata(e) {
@@ -130,79 +131,54 @@ const MyComponent = () => {
     // console.log('dataChapter ---> ', dataimg);
   }
 
+  // Switch Toggle
   const [isSwitchOn, setIsSwitchOn] = useState(false);
-
   const handleSwitchChange = () => {
     setIsSwitchOn(!isSwitchOn);
   };
-  const handleFormSubmit = async (e) => {
+
+  // Form Upload ContentChapter && DataImg
+  async function handleFormSubmit(e) {
     e.preventDefault();
     const chapternumber = e.target[2].value;
     const title = e.target[3].value;
+    if (!files.length) {
+      return alert("เกิดข้อผิดพลาด กรอกข้อมูลไม่ครบ")
+    }
 
+    // Image Chapter && DataImg
     const formData = new FormData();
     const formDataImg = new FormData();
 
     files.forEach(file => {
       formData.append('files', file)
     })
-
     fileImgs.forEach(file => {
       formDataImg.append('files', file)
     })
 
-    try {
+     const res = await uploadChapter(formData, formDataImg, chapternumber, title, dataselect, isSwitchOn);
+     if(res?.errMsg){
+       alert(`Error: ${res?.errMsg}`)
+     }
+     if(res?.msg){
+      console.log(res?.msg)
       Swal.fire({
-        title: 'คุณต้องแก้ไขผลงานหรือไม่',
-        text: "คุณจะเปลี่ยนกลับไม่ได้!",
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
-        cancelButtonText: 'ยกเลิก',
-        confirmButtonText: 'แก้ไขผลงาน'
-      }).then(async (result) => {
-        if (result.isConfirmed) {
-          console.log('sentData');
-          const res = await uploadchapter(formData, formDataImg, chapternumber, title, dataselect , isSwitchOn);
-
-          if (res){
-            
-              /* Read more about handling dismissals below */
-                Swal.fire({
-                  position: 'center',
-                  icon: 'success',
-                  title: 'สร้างผลงานสำเร็จ',
-                  showConfirmButton: false,
-                  timer: 3000
-                })
-                   // เมื่อโหลดข้อมูลเสร็จแล้วทำการล้างข้อมูลอื่น ๆ และรีเซ็ตฟอร์ม
-                   setFiles([]);
-                   setFileImgs([]);
-                   formRef.current.reset();
-
-                   fetch(`/api/contents/${session.data?.user._id}`)
-                   .then((response) => response.json())
-                   .then((data) => setData(data));
-          }
-          // revalidatePath("/")
-        }
+        position: 'center',
+        icon: 'success',
+        title: 'สร้างผลงานการ์ตูนสำเร็จ',
+        showConfirmButton: false,
+        timer: 3000
       })
-
-
-
-      // Send the form data (formData) to the server or perform necessary actions
-      // const res = uploadcontents(formDatafg, formDatabg, formDatalogo, formDatadetail, formDataContent, user)
-
-
-    } catch (error) {
-      console.log('contentError ---> ', error);
+      setFiles([]);
+      setFileImgs([]);
+      formRef.current.reset();
+     }
+    //  revalidate("/")
     }
-
-  };
-
-
+ 
   const [update, setUpdate] = useState();
+  
   async function handleDeleteChapter(_id) {
     try {
       const res = await fetch("../api/createchapter", {
@@ -302,19 +278,19 @@ const MyComponent = () => {
                         </FormControl>
                       </label>
                       <label className="flex items-center p-5 mt-[22px]">
-                      <FormControl display='flex' alignItems='center'>
-                        <FormLabel htmlFor='email-alerts' fontSize={'lg'} mb='0'>
-                         เปิดให้อ่านฟรี ?
-                        </FormLabel>
-                        <Switch  isChecked={isSwitchOn} onChange={handleSwitchChange} size={'lg'} />
-                        <FormLabel  fontSize={'lg'} ml={'5'} mb='0'>
-                        <Text>Switch is {isSwitchOn ? "On" : "Off"}</Text>
-                        </FormLabel>
-                      </FormControl>
+                        <FormControl display='flex' alignItems='center'>
+                          <FormLabel htmlFor='email-alerts' fontSize={'lg'} mb='0'>
+                            เปิดให้อ่านฟรี ?
+                          </FormLabel>
+                          <Switch isChecked={isSwitchOn} onChange={handleSwitchChange} size={'lg'} />
+                          <FormLabel fontSize={'lg'} ml={'5'} mb='0'>
+                            <Text>Switch is {isSwitchOn ? "On" : "Off"}</Text>
+                          </FormLabel>
+                        </FormControl>
                       </label>
-                      
-                      
-                    
+
+
+
 
                     </div>
                   </Box>
@@ -322,8 +298,6 @@ const MyComponent = () => {
                     <div className='lg:flex gap-5'>
                       <label className="block ">
                         <Text fontSize='xl'>อัพโหลดไฟล์</Text>
-
-
                         <input
                           onChange={handleInputFilesDataImg}
                           multiple
@@ -331,9 +305,6 @@ const MyComponent = () => {
                           accept='image/*'
                           className=" outline-none  flex-1 text-gray-900 border border-transparent rounded-lg  sm:text-md focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                         />
-
-
-
                       </label>
                       <label className="block ">
                         <Text fontSize='xl'>พรีวิว</Text>
@@ -366,7 +337,7 @@ const MyComponent = () => {
                         </Tabs>
                       </label>
                     </div>
-                    
+
                   </Box>
 
                   <Box width={'100%'} display={'flex'} justifyContent={'end'}>
