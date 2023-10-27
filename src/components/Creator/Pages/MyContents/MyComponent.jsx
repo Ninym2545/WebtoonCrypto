@@ -167,24 +167,12 @@ const MyComponent = () => {
           const res = await uploadchapter(formData, formDataImg, chapternumber, title, dataselect , isSwitchOn);
 
           if (res){
-            console.log('res --> ', res);
-            let timerInterval
-            Swal.fire({
-              title: "กำลังสร้างการ์ตูน",
-              timer: 3000,
-              didOpen: () => {
-                Swal.showLoading()
-              },
-              willClose: () => {
-                clearInterval(timerInterval)
-              }
-            }).then((result) => {
+            
               /* Read more about handling dismissals below */
-              if (result.dismiss === Swal.DismissReason.timer) {
                 Swal.fire({
                   position: 'center',
                   icon: 'success',
-                  title: 'แก้ไขผลงานสำเร็จ',
+                  title: 'สร้างผลงานสำเร็จ',
                   showConfirmButton: false,
                   timer: 3000
                 })
@@ -192,11 +180,10 @@ const MyComponent = () => {
                    setFiles([]);
                    setFileImgs([]);
                    formRef.current.reset();
+
                    fetch(`/api/contents/${session.data?.user._id}`)
                    .then((response) => response.json())
                    .then((data) => setData(data));
-              }
-            })
           }
           // revalidatePath("/")
         }

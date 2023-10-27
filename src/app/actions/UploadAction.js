@@ -136,7 +136,7 @@ export async function uploadchapter(
     ];
 
     // console.log("update",contentsid)
-    const update = await Contents.findByIdAndUpdate(
+    await Contents.findByIdAndUpdate(
       {
         _id: _id,
       },
