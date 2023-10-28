@@ -18,7 +18,9 @@ import { DateHelper } from '../../../DateHelper/DataFormat'
 import Swal from 'sweetalert2'
 import { revalidate } from '@/app/api/evidence/route'
 
-const MyComponent = () => {
+
+
+const MyComponent = ({ projects }) => {
     const bg = useColorModeValue('white', 'gray.700')
     const session = useSession();
     // ผู้ขอเป็น Creator
@@ -29,7 +31,7 @@ const MyComponent = () => {
     const [user, setUser] = useState([]);
 
     const [filterUser, setFilterUser] = useState([]);
-  
+
     useEffect(() => {
         fetch(`/api/evidence`, { cache: 'no-store' })
         .then((res) => {
