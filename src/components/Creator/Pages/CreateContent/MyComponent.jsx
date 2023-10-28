@@ -5,30 +5,12 @@ import Previewimage from './Previewimage'
 import Previewinput from './Previewinput'
 import { Textarea } from '@chakra-ui/react'
 import { Select } from '@chakra-ui/react'
-import {
-  Menu,
-  MenuButton,
-  MenuList,
-  MenuItem,
-  MenuItemOption,
-  MenuGroup,
-  MenuOptionGroup,
-  MenuDivider,
-} from '@chakra-ui/react'
 import { Tabs, TabList, TabPanels, Tab, TabPanel } from '@chakra-ui/react'
-import {
-  Alert,
-  AlertIcon,
-  AlertTitle,
-  AlertDescription,
-} from '@chakra-ui/react'
-import { Checkbox, CheckboxGroup } from '@chakra-ui/react'
-import { ChevronDownIcon } from '@chakra-ui/icons'
-import { updatecontents, uploadcontents } from '../../../../app/actions/UploadContentAction'
+import { Checkbox } from '@chakra-ui/react'
+import { updateContent, uploadcontents } from '../../../../../actions/UploadContentAction'
 import { useSession } from 'next-auth/react'
 import Swal from 'sweetalert2'
 import { useRouter } from 'next/navigation'
-import useSWR from 'swr';
 
 
 const MyComponent = () => {
@@ -36,15 +18,32 @@ const MyComponent = () => {
   const formRef = useRef();
   const session = useSession();
   const route = useRouter();
-
-  useEffect(() => {
-    if (session?.status === "unauthenticated") {
-      window.location.href = "/";
-    }
-  },[])
+  // dataContent && filterContent
+  const [dataContent, setDataContent] = useState();
+  const [dataselect, setdataselect] = useState();
   // --- Checkbox --- //
   const [isChecked, setIsChecked] = useState(false);
   const [formDataContent, setFormDataContent] = useState({});
+
+  // --- file image --- //
+  const [files, setFiles] = useState([]);
+  const [filesbg, setFilebg] = useState([]);
+  const [fileslogo, setFilelogo] = useState([]);
+  const [filesdetail, setFiledetail] = useState([]);
+  const [error, setError] = useState('');
+
+  useEffect(() => {
+
+    fetch(`/api/contents/${session?.data?.user._id}`)
+      .then((response) => response.json())
+      .then((data) => setDataContent(data));
+
+    if (session?.status === "unauthenticated") {
+      window.location.href = "/";
+    }
+
+  }, [])
+
 
   const handleCheckboxChange = () => {
     setIsChecked(!isChecked);
@@ -54,12 +53,7 @@ const MyComponent = () => {
     setFormDataContent({ ...formDataContent, [name]: value });
   };
 
-  // --- file image --- //
-  const [files, setFiles] = useState([]);
-  const [filesbg, setFilebg] = useState([]);
-  const [fileslogo, setFilelogo] = useState([]);
-  const [filesdetail, setFiledetail] = useState([]);
-  const [error, setError] = useState('');
+
   // --- image photo fg --- //
   async function handleInputFiles(e) {
     const files = e.target.files;
@@ -70,7 +64,7 @@ const MyComponent = () => {
         return file;
       }
     })
-    setFiles(prev => [...newFiles, ...prev])
+    setFiles(prev => [...newFiles])
   }
   async function handleDeleteFile(index) {
     const newFiles = files.filter((_, i) => i !== index)
@@ -86,7 +80,7 @@ const MyComponent = () => {
         return file;
       }
     })
-    setFilebg(prev => [...newFilesbg, ...prev])
+    setFilebg(prev => [...newFilesbg])
   }
   async function handleDeleteFilebg(index) {
     const newFilesbg = filesbg.filter((_, i) => i !== index)
@@ -102,7 +96,7 @@ const MyComponent = () => {
         return file;
       }
     })
-    setFilelogo(prev => [...newFileslogo, ...prev])
+    setFilelogo(prev => [...newFileslogo])
   }
   async function handleDeleteFilelogo(index) {
     const newFileslogo = fileslogo.filter((_, i) => i !== index)
@@ -118,15 +112,15 @@ const MyComponent = () => {
         return file;
       }
     })
-    setFiledetail(prev => [...newFilesdetail, ...prev])
+    setFiledetail(prev => [...newFilesdetail])
   }
   async function handleDeleteFiledetail(index) {
     const newFilesdetail = filesdetail.filter((_, i) => i !== index)
     setFiledetail(newFilesdetail)
   }
 
-  // --- Create Contents --- // 
-  const handleFormSubmit = async (e) => {
+  // --- Create Content --- // 
+  async function handleFormSubmit(e) {
     e.preventDefault();
     const user = session.data?.user._id
     const username = session.data?.user.name
@@ -137,16 +131,16 @@ const MyComponent = () => {
     const formDatadetail = new FormData();
 
     files.forEach(file => {
-      formDatafg.append('files', file)
+      formDatafg.append('file', file)
     })
     filesbg.forEach(file => {
-      formDatabg.append('files', file)
+      formDatabg.append('file', file)
     })
     fileslogo.forEach(file => {
-      formDatalogo.append('files', file)
+      formDatalogo.append('file', file)
     })
     filesdetail.forEach(file => {
-      formDatadetail.append('files', file)
+      formDatadetail.append('file', file)
     })
 
     try {
@@ -160,156 +154,117 @@ const MyComponent = () => {
           cancelButtonColor: '#d33',
           cancelButtonText: 'ยกเลิก',
           confirmButtonText: 'สร้างผลงาน'
-        }).then((result) => {
+        }).then(async (result) => {
           if (result.isConfirmed) {
-            const res = uploadcontents(formDatafg, formDatabg, formDatalogo, formDatadetail, formDataContent, user, username)
-            if (res?.msg) alert('Create Content success')
-            let timerInterval
-            Swal.fire({
-              title: "กำลังสร้างผลงาน",
-              timer: 3000,
-              didOpen: () => {
-                  Swal.showLoading()
-                },
-                willClose: () => {
-                  clearInterval(timerInterval)
-                }
-          }).then((result) => {
-              /* Read more about handling dismissals below */
-              if (result.dismiss === Swal.DismissReason.timer) {
-                  Swal.fire({
-                      position: 'center',
-                      icon: 'success',
-                      title: 'สร้างผลงานสำเร็จ',
-                      showConfirmButton: false,
-                      timer: 2000
-                    }) 
-                    setTimeout(() => {
-                      route.push("/creator/mycontents"); 
-                  }, 1000)
-              }
-          
-              
-            })
-            if (res?.errMsg) alert(`Error: ${res?.errMsg}`)
+            const res = await uploadcontents(formDatafg, formDatabg, formDatalogo, formDatadetail, formDataContent, user, username)
+            if (res.errMsg) {
+              alert(`Error: ${res?.errMsg}`)
+            }
+            if (res?.msg) {
+              Swal.fire({
+                position: 'center',
+                icon: 'success',
+                title: 'สร้างผลงานสำเร็จ',
+                showConfirmButton: false,
+                timer: 2000
+              })
+              setFiles([])
+              setFilebg([])
+              setFilelogo([])
+              setFiledetail([])
+              formRef.current.reset();
+              route.push("/creator/mycontents");
+            }
           }
         })
-        formRef.current.reset()
-
-        revalidate("/")
-        // Send the form data (formData) to the server or perform necessary actions
-        // const res = uploadcontents(formDatafg, formDatabg, formDatalogo, formDatadetail, formDataContent, user)
       } else {
         setError('Please check the box before submitting.');
-
       }
     } catch (error) {
       console.log('contentError ---> ', error);
     }
 
   };
- 
 
-  const [dataselect , setdataselect] = useState();
-  const fetcher = (...args) => fetch(...args).then((res) => res.json());
 
-  const { data, isLoading } = useSWR(
-      `/api/contents/${session?.data?.user._id}`,
-      fetcher
-  );
-
+  // --- Show Content Filter --- //
   async function selectdata(e) {
     const value = e.target.value
 
-    const datafilter = data.find((item) => item.title == value);
+    const datafilter = dataContent?.find((item) => item.title == value);
     setdataselect(datafilter)
-    console.log('datafillter --> ', datafilter);
+    // console.log('datafillter --> ', datafilter);
 
-     document.querySelector("#show-author").value = datafilter.author.toString();
-     document.querySelector("#show-desc").value = datafilter.desc.toString();
-     document.querySelector("#show-date").innerHTML = " <option value='option1'>"+datafilter.day.toString()+"</option> " 
-     document.querySelector("#show-category").innerHTML = " <option value='option1'>"+datafilter.category.toString()+"</option> "  
+    document.querySelector("#show-author").value = datafilter.author.toString();
+    document.querySelector("#show-desc").value = datafilter.desc.toString();
+    document.querySelector("#show-date").innerHTML = " <option value='option1'>" + datafilter.day.toString() + "</option> "
+    document.querySelector("#show-category").innerHTML = " <option value='option1'>" + datafilter.category.toString() + "</option> "
 
-}
+  }
 
- // --- Update Contents --- // 
- const handleUpdateSubmit = async (e) => {
-  e.preventDefault();
-  const user = session.data?.user._id
+  // --- Update Content --- // 
+  async function handleUpdateSubmit(e) {
+    e.preventDefault();
+    // console.log('dataselect' , dataselect);
+    // console.log('2',title);
 
-  const formDatafg = new FormData();
-  const formDatabg = new FormData();
-  const formDatalogo = new FormData();
-  const formDatadetail = new FormData();
 
-  files.forEach(file => {
-    formDatafg.append('files', file)
-  })
-  filesbg.forEach(file => {
-    formDatabg.append('files', file)
-  })
-  fileslogo.forEach(file => {
-    formDatalogo.append('files', file)
-  })
-  filesdetail.forEach(file => {
-    formDatadetail.append('files', file)
-  })
-  try {
+    const formDatafg = new FormData();
+    const formDatabg = new FormData();
+    const formDatalogo = new FormData();
+    const formDatadetail = new FormData();
+
+    files.forEach(file => {
+      formDatafg.append('file', file)
+    })
+    filesbg.forEach(file => {
+      formDatabg.append('file', file)
+    })
+    fileslogo.forEach(file => {
+      formDatalogo.append('file', file)
+    })
+    filesdetail.forEach(file => {
+      formDatadetail.append('file', file)
+    })
+
+    try {
       Swal.fire({
-        title: 'คุณต้องแก้ไขผลงานหรือไม่',
+        title: 'คุณต้องการแก้ไขผลงานหรือไม่',
         text: "คุณจะเปลี่ยนกลับไม่ได้!",
         icon: 'warning',
         showCancelButton: true,
         confirmButtonColor: '#3085d6',
         cancelButtonColor: '#d33',
         cancelButtonText: 'ยกเลิก',
-        confirmButtonText: 'แก้ไขผลงาน'
-      }).then((result) => {
+        confirmButtonText: 'สร้างผลงาน'
+      }).then(async (result) => {
         if (result.isConfirmed) {
-          const res = updatecontents(formDatafg, formDatabg, formDatalogo, formDatadetail, formDataContent, user , dataselect)
-
-          if (res?.msg) alert('Update Content success')
-          let timerInterval
-          Swal.fire({
-            title: "กำลังแก้ไข",
-            timer: 4000,
-            didOpen: () => {
-                Swal.showLoading()
-              },
-              willClose: () => {
-                clearInterval(timerInterval)
-              }
-        }).then((result) => {
-            /* Read more about handling dismissals below */
-            if (result.dismiss === Swal.DismissReason.timer) {
-                Swal.fire({
-                    position: 'center',
-                    icon: 'success',
-                    title: 'แก้ไขผลงานสำเร็จ',
-                    showConfirmButton: false,
-                    timer: 2000
-                  }) 
-                  setTimeout(() => {
-                    route.push("/creator/mycontents"); 
-                }, 1000)
-            }
-        
-            
-          })
-          if (res?.errMsg) alert(`Error: ${res?.errMsg}`)
+          // const res = await updateContent(formDatafg, formDatabg, formDatalogo, formDatadetail, formDataContent , user)
+          const res = await updateContent(dataselect, formDatafg, formDatabg, formDatalogo, formDatadetail)
+          if (res?.errMsg) {
+            alert(`Error: ${res?.errMsg}`)
+          }
+          if (res?.msg) {
+            Swal.fire({
+              position: 'center',
+              icon: 'success',
+              title: 'แก้ไขผลงานสำเร็จ',
+              showConfirmButton: false,
+              timer: 2000
+            })
+            setFiles([])
+            setFilebg([])
+            setFilelogo([])
+            setFiledetail([])
+            formRef.current.reset();
+            route.push("/creator/mycontents");
+          }
         }
       })
-      formRef.current.reset()
-
-      revalidate("/")
-      // Send the form data (formData) to the server or perform necessary actions
-      // const res = uploadcontents(formDatafg, formDatabg, formDatalogo, formDatadetail, formDataContent, user)
-  
-  } catch (error) {
-    console.log('contentError ---> ', error);
-  }
-
-};
+    } catch (error) {
+      console.log('contentError ---> ', error);
+    }
+  };
 
 
   return (
@@ -501,16 +456,16 @@ const MyComponent = () => {
                       <Text>ข้าพเจ้าเห็นด้วยกับ <span className='text-blue-500'>นโยบายการดำเนินงาน</span> และ <span className='text-blue-500'>นโยบายความเป็นส่วนตัว</span> ของ WEBTOON เรื่องข้อจำกัดสำหรับทุกคนที่อายุต่ำกว่า 14 ปี ในการเผยแพร่ผลงาน</Text>
                     </Stack>
                     <Stack ml={'10'}>
-                    {error && <div className='text-sm text-red-500 opacity-80' >{error}</div>}
+                      {error && <div className='text-sm text-red-500 opacity-80' >{error}</div>}
                     </Stack>
                   </Box>
                   {isChecked ? <Box width={'100%'} display={'flex'} justifyContent={'end'}>
                     <Button colorScheme="green" size={'lg'} type='submit' >สร้างผลงาน</Button>
-                  </Box>:
-                  
-                  <Box width={'100%'} display={'flex'} justifyContent={'end'}>
-                    <Button colorScheme="gray" cursor={'not-allowed'} size={'lg'} >สร้างผลงาน</Button>
-                  </Box>
+                  </Box> :
+
+                    <Box width={'100%'} display={'flex'} justifyContent={'end'}>
+                      <Button colorScheme="gray" cursor={'not-allowed'} size={'lg'} >สร้างผลงาน</Button>
+                    </Box>
                   }
                 </Box>
 
@@ -644,25 +599,23 @@ const MyComponent = () => {
                   <Box mb={'5'}>
                     <Text fontSize='xl'>ชื่อผลงาน</Text>
                     <Select placeholder='หมวดหมู่ผลงาน' my={'2'} onChange={selectdata}>
-                    {isLoading
-                        ? "loading"
-                        : data?.map((content) => (
-                          <option key={content._id} >{content.title}</option>
+                      {dataContent?.map((content) => (
+                        <option key={content._id} >{content.title}</option>
 
-                        ))}
+                      ))}
                     </Select>
                   </Box>
                   <Box mb={'5'}>
                     <Text fontSize='xl'>ผู้แต่ง</Text>
                     <FormControl isRequired my={'2'}>
-                      <Input placeholder='น้อยกว่า 50 ตัวอักษร' id="show-author" disabled/>
+                      <Input placeholder='น้อยกว่า 50 ตัวอักษร' id="show-author" disabled />
                     </FormControl>
                   </Box>
                   <Box mb={'5'}>
                     <div className='flex gap-2'>
                       <label className="block ">
                         <label for="category" className="block text-lg font-medium ">หมวดหมู่</label>
-                        <Select id="show-category"   my={'2'} disabled>
+                        <Select id="show-category" my={'2'} disabled>
                           <option value='โรแมนซ์แฟนตาซี'>โรแมนซ์แฟนตาซี</option>
                           <option value='โรแมนซ์'>โรแมนซ์</option>
                           <option value='แอ็กชัน'>แอ็กชัน</option>
@@ -673,7 +626,7 @@ const MyComponent = () => {
                       </label>
                       <label className="block ">
                         <label for="week" className="block text-lg font-medium ">วันที่อัพโหลด</label>
-                        <Select id="show-date"  my={'2'} disabled>
+                        <Select id="show-date" my={'2'} disabled>
                           <option value='จันทร์'>จันทร์</option>
                           <option value='อังคาร'>อังคาร</option>
                           <option value='พุธ'>พุธ</option>
@@ -689,7 +642,7 @@ const MyComponent = () => {
 
                   <Box mb={'5'}>
                     <Text fontSize='xl'>เรื่องย่อ</Text>
-                    <Textarea id="show-desc" placeholder='น้อยกว่า 500 ตัวอักษร' height={'44'} my={'2'} disabled/>
+                    <Textarea id="show-desc" placeholder='น้อยกว่า 500 ตัวอักษร' height={'44'} my={'2'} disabled />
                   </Box>
                   <Box mb={'5'}>
                     <Text fontSize='lg' color={'green.300'}>ข้อควรระวัง</Text>

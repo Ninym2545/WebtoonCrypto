@@ -32,21 +32,43 @@ const MyComponent = () => {
   const route = useRouter();
   const formRef = useRef();
   //img chapter
-  const [files, setFiles] = useState([]);
+  const [chapter, setChapter] = useState([]);
   //img dataimg
   const [fileImgs, setFileImgs] = useState([]);
+  // Type Defult
   const [typewt, settypewt] = useState("โรแมนซ์แฟนตาซี");
+  
+  // ข้อมูลผลงานที่คัดกรองแล้ว
+  const [dataselect, setdataselect] = useState();
+  // ข้อมูลหลังการลบ
+  const [dataselectEdit, setdataselectEdit] = useState();
+  // ข้อมูลรายรูปภาพ
+  const [dataImg, setdataImg] = useState();
+  // Fetch API
+  const [data, setData] = useState();
+  useEffect(() => {
+    if (session?.status === "unauthenticated") {
+      window.location.href = "/";
+    }
+
+    setTimeout(() => {
+      fetch(`/api/contents/${session.data?.user._id}`).then(res => res.json()).then(data => {
+        setData(data)
+        console.log('data ---> ', data);
+      })
+    }, 4000);
+  }, [])
 
   // --- image photo Chapter --- //
   async function handleInputFiles(e) {
     const files = e.target.files;
-
+    // console.log('filr', files);
     const newFiles = [...files].filter(file => {
       if (file.size < 6000 * 6000 && file.type.startsWith('image/')) {
         return file;
       }
     })
-    setFiles(prev => [...newFiles, ...prev])
+     setChapter(prev => [...newFiles])
   }
   async function handleDeleteFile(index) {
     const newFiles = files.filter((_, i) => i !== index)
@@ -70,25 +92,7 @@ const MyComponent = () => {
     setFileImgs(newFileImgs)
   }
 
-
-  const [dataselect, setdataselect] = useState();
-  const [dataselectEdit, setdataselectEdit] = useState();
-  const [dataImg, setdataImg] = useState();
-  const [data, setData] = useState();
-
-  useEffect(() => {
-    if (session?.status === "unauthenticated") {
-      window.location.href = "/";
-    }
-
-    setTimeout(() => {
-      fetch(`/api/contents/${session.data?.user._id}`).then(res => res.json()).then(data => {
-        setData(data)
-        console.log('data ---> ', data);
-      })
-    }, 4000);
-  }, [])
-
+ // --- Selete Filter Data --- //
   async function selectdata(e) {
     const value = e.target.value
 
@@ -142,27 +146,28 @@ const MyComponent = () => {
     e.preventDefault();
     const chapternumber = e.target[2].value;
     const title = e.target[3].value;
-    if (!files.length) {
+    if (!chapter.length) {
       return alert("เกิดข้อผิดพลาด กรอกข้อมูลไม่ครบ")
     }
 
     // Image Chapter && DataImg
-    const formData = new FormData();
     const formDataImg = new FormData();
-
-    files.forEach(file => {
-      formData.append('files', file)
+    const formData = new FormData();
+    chapter.forEach(file => {
+      formData.append('file', file)
     })
     fileImgs.forEach(file => {
       formDataImg.append('files', file)
     })
 
-     const res = await uploadChapter(formData, formDataImg, chapternumber, title, dataselect, isSwitchOn);
-     if(res?.errMsg){
-       alert(`Error: ${res?.errMsg}`)
-     }
+    // const res = await uploadChapter(formData, formDataImg, chapternumber, title, dataselect, isSwitchOn);
+    const res = await uploadChapter(formData , formDataImg , chapternumber, title, dataselect, isSwitchOn);
+    if (res?.errMsg) {
+      alert(`Error: ${res?.errMsg}`)
+    }
+    // if (res?.msg) alert(`Hello: ${res?.msg}`)
      if(res?.msg){
-      console.log(res?.msg)
+      // console.log(res?.msg);
       Swal.fire({
         position: 'center',
         icon: 'success',
@@ -170,15 +175,15 @@ const MyComponent = () => {
         showConfirmButton: false,
         timer: 3000
       })
-      setFiles([]);
+      setChapter([]);
       setFileImgs([]);
       formRef.current.reset();
      }
-    //  revalidate("/")
-    }
+      revalidate("/")
+  }
  
+  // --- Delete Chapter --- //
   const [update, setUpdate] = useState();
-  
   async function handleDeleteChapter(_id) {
     try {
       const res = await fetch("../api/createchapter", {
@@ -228,7 +233,7 @@ const MyComponent = () => {
                           <div className='flex flex-col items-center justify-center w-full h-[300px] border-2 border-gray-300 border-dashed rounded-lg cursor-pointer '>
                             <div className='mb-3'>
                               {
-                                files.map((file, index) => (
+                                chapter?.map((file, index) => (
                                   <Previewimage key={index} url={URL.createObjectURL(file)} onClick={() => handleDeleteFile(index)} />
                                 ))
                               }

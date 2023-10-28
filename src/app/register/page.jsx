@@ -47,7 +47,7 @@ const Page = () => {
         <div className={styles.container}>
             <form onSubmit={handleSubmit} >
                 <div className="flex flex-col items-center justify-center min-h-screen py-2 ">
-                    <div className=" bg-[#2D3131] rounded-2xl rounded-tr-3xl rounded-br-3xl shadow-2xl flex  w-[850px]">
+                    <div className=" bg-[#204779] rounded-2xl rounded-tr-3xl rounded-br-3xl shadow-2xl flex  w-[850px]">
                         <div className="font-bold w-2/5  rounded-tl-2xl rounded-bl-2xl py-40 px-12 ">
                             <h2 className="text-3xl font-bold mb-2">Hello, Friend</h2>
                             <div className="border-2 w-10 border-white inline-block mb-2"></div>

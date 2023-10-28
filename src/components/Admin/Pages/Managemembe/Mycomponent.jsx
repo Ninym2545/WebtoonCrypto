@@ -15,6 +15,7 @@ import {
 } from '@chakra-ui/react'
 import { useSession } from 'next-auth/react'
 import { DateHelper } from '../../../DateHelper/DataFormat'
+import Swal from 'sweetalert2'
 
 const MyComponent = () => {
     const bg = useColorModeValue('white', 'gray.700')
@@ -62,27 +63,36 @@ const MyComponent = () => {
                     _id
                 })
             });
-            const content = await res.json();
-
-            setTimeout(() => {
-                setData(content.evidence);
-                fetch("/api/user")
-                    .then((res) => res.json())
-                    .then((data) => {
-                        console.log('update --->', data);
-                        if (Array.isArray(data)) {
-                            // Ensure that data is an array before using map
-                            const creatorfilter = data.filter((item) => item.role == 'creator');
-                            setCreator(creatorfilter)
-                            const prendingfilter = data.filter((item) => item.role == 'prending');
-                            setPrending(prendingfilter)
-                            const userfilter = data.filter((item) => item.role == 'user');
-                            setUser(userfilter)
-                            const filter = data.filter((item) => item.role !== 'admin');
-                            setFilter(filter);
-                        }
-                    });
-            }, 2000);
+            if(res){
+                const content = await res.json();
+                const evidence = content.evidence
+                Swal.fire({
+                    position: 'center',
+                    icon: 'success',
+                    title: 'อนุมัติสำเร็จ',
+                    showConfirmButton: false,
+                    timer: 3000
+                  })
+                    // location.reload()
+                    setData(evidence);
+                    fetch("/api/user")
+                        .then((res) => res.json())
+                        .then((data) => {
+                            console.log('update --->', data);
+                            if (Array.isArray(data)) {
+                                // Ensure that data is an array before using map
+                                const creatorfilter = data.filter((item) => item.role == 'creator');
+                                setCreator(creatorfilter)
+                                const prendingfilter = data.filter((item) => item.role == 'prending');
+                                setPrending(prendingfilter)
+                                const userfilter = data.filter((item) => item.role == 'user');
+                                setUser(userfilter)
+                                const filter = data.filter((item) => item.role !== 'admin');
+                                setFilter(filter);
+                            }
+                        });
+            }
+        
 
         } catch (error) {
             console.log('error -->', error);
