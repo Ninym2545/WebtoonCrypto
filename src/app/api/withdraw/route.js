@@ -26,7 +26,7 @@ export const POST = async (require) => {
      const createWithdraw = new WithDraw({
         user_id: user_id,
         wallet_id: Wallet,
-        cash: Coin * 100,
+        cash: Coin,
       });
       console.log('createWithdraw ---> ', createWithdraw);
         await createWithdraw.save();
