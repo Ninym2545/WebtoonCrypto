@@ -34,7 +34,7 @@ const MyComponent = () => {
 
   useEffect(() => {
 
-    fetch(`/api/contents/${session?.data?.user._id}`)
+    fetch(`/api/contents/${session?.data?.user._id}` , { cache: 'no-store' })
       .then((response) => response.json())
       .then((data) => setDataContent(data));
 

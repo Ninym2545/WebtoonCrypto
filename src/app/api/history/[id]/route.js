@@ -4,10 +4,10 @@ import connect from "@/utils/db";
 import history from "@/models/history";
 
 
+await connect();
 export const GET = async (request , {params}) => {
     const {id} = params;
   try {
-    await connect();
     const historys = await history.find({
         user_id: id
     })

@@ -68,7 +68,7 @@ const Chapter = ({ webtoon }) => {
       window.location.href = "/";
     }
     if(result){
-      route.push(`/viewer/${webtoon}/${chap._id}`)
+      route.push(`/viewer/${webtoon}/${chap._id}` , { cache: 'no-store' })
     }else{
       const user = session?.data?.user;
       if (user?.ticker_buy === 0 && user.ticker_rent === 0) {

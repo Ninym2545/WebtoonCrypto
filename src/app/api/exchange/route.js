@@ -5,11 +5,11 @@ import User from "../../../models/User";
 import Exchange from '../../../models/Exchange';
 
 
+await connect();
 export const GET = async (request) => {
     try {
-      await connect();
       const chapter = await Exchange.find();
-  
+      console.log('exchange' , chapter);
       return new NextResponse(JSON.stringify(chapter), { status: 200 });
     } catch (err) {
       return new NextResponse("Database Error!", { status: 500 });

@@ -43,12 +43,12 @@ import connect from "@/utils/db";
 //     });
 //   }
 // };
+await connect();
 
 export const POST = async (request) => {
   try {
 
     const { name, email, password  } = await request.json();
-    await connect();
 
     const user = await User.findOne({
       email: email 

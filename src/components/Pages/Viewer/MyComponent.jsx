@@ -53,7 +53,7 @@ const MyComponent = async ({ viewer }) => {
       window.location.href = "/";
     }
     const chapter_id = viewer.contentid;
-    fetch(`/api/chapter/${chapter_id}`) // Make sure this URL is correct
+    fetch(`/api/chapter/${chapter_id}` , { cache: 'no-store' } ) // Make sure this URL is correct
     .then((res) => {
       if (!res.ok) {
         throw new Error(`Network response was not ok: ${res.status}`);

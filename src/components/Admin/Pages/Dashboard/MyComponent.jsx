@@ -37,20 +37,20 @@ const MyComponent = () => {
     if (session?.status === "unauthenticated") {
       window.location.href = "/";
     }
-    fetch(`/api/history`)
+    fetch(`/api/history`, { cache: 'no-store' })
       .then((response) => response.json())
       .then((data) => setHistory(data));
 
-    fetch(`/api/withdraw`).then(res => res.json()).then(data => {
+    fetch(`/api/withdraw`, { cache: 'no-store' }).then(res => res.json()).then(data => {
       const creatorStatus = data.filter((item) => item.status == 'Prending');
       setWithdraw(creatorStatus)
     })
 
-    fetch(`/api/contents`)
+    fetch(`/api/contents`, { cache: 'no-store' })
       .then((response) => response.json())
       .then((data) => setContents(data));
 
-    fetch(`/api/buy-rent`)
+    fetch(`/api/buy-rent`, { cache: 'no-store' })
       .then((response) => response.json())
       .then((data) => {
         setBuyRent(data)

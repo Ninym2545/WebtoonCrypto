@@ -52,7 +52,7 @@ const MyComponent = () => {
     }
 
     setTimeout(() => {
-      fetch(`/api/contents/${session.data?.user._id}`).then(res => res.json()).then(data => {
+      fetch(`/api/contents/${session.data?.user._id}`, { cache: 'no-store' }).then(res => res.json()).then(data => {
         setData(data)
         console.log('data ---> ', data);
       })

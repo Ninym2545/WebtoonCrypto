@@ -4,10 +4,10 @@ import WithDraw from "../../../../models/Withdraw";
 
 
 
+await connect();
 export const GET = async (request , {params}) => {
     const {id} = params;
   try {
-    await connect();
     const historys = await WithDraw.find({
         user_id: id
     })

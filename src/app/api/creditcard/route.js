@@ -8,12 +8,12 @@ let omise = require("omise")({
   secretKey: "skey_test_5wvk6rl1rkq4b01js2e",
 });
 
+await connect();
 export const POST = async (request) => {
   const { email, name, creditprice, token, coin, user_id } =
     await request.json();
   const defaultPrice = creditprice / 100;
   try {
-    await connect();
     const customer = await omise.customers.create({
       email: email,
       description: name,
@@ -66,8 +66,6 @@ export const PUT = async (request) => {
   const { email,name, coin, price,  user_id,  result } = await request.json();
   const defaultPrice = price / 100;
   try {
-    await connect();
-   
     const createHistory = new history({
       user_id: user_id,
       user_name: name,

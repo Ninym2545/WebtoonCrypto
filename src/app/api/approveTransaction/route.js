@@ -3,7 +3,9 @@ import { NextResponse } from "next/server";
 import Withdraw from "@/models/Withdraw";
 import axios from "axios";
 import { withdraw as ethersWithdraw } from "../ethers/ethers.service";
+import connectDB from "@/utils/db";
 
+await connectDB()
 export const POST = async (require) => {
   try {
     const { _id } = await require.json();

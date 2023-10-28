@@ -5,11 +5,11 @@ import User from "../../../models/User";
 import Follow from '../../../models/Follow';
 import Content from '../../../models/Content';
 
+await connect();
 export const GET = async (request) => {
     try {
-      await connect();
       const chapter = await Follow.find();
-  
+      console.log('follow' ,chapter);
       return new NextResponse(JSON.stringify(chapter), { status: 200 });
     } catch (err) {
       return new NextResponse("Database Error!", { status: 500 });

@@ -16,41 +16,62 @@ import {
 import { useSession } from 'next-auth/react'
 import { DateHelper } from '../../../DateHelper/DataFormat'
 import Swal from 'sweetalert2'
+import { revalidate } from '@/app/api/evidence/route'
 
 const MyComponent = () => {
     const bg = useColorModeValue('white', 'gray.700')
     const session = useSession();
-    const [data, setData] = useState();
+    // ผู้ขอเป็น Creator
+    const [evidence, setEvidence] = useState([]);
+    // สถานะของผู้ใช้ในระบบ
+    const [creator, setCreator] = useState([]);
+    const [prending, setPrending] = useState([]);
+    const [user, setUser] = useState([]);
 
-    const [creator, setCreator] = useState();
-    const [prending, setPrending] = useState();
-    const [user, setUser] = useState();
-    const [filter, setFilter] = useState();
-
+    const [filterUser, setFilterUser] = useState([]);
+  
     useEffect(() => {
-
-        if (session?.status === "unauthenticated") {
-            window.location.href = "/";
+        fetch(`/api/evidence`, { cache: 'no-store' })
+        .then((res) => {
+          if (res.ok) {
+            return res.json();
+          } else {
+            throw new Error('Failed to fetch data');
           }
-        fetch(`/api/evidence`).then(res => res.json()).then(data => {
-            const creatorStatus = data.filter((item) => item.status == 'prending');
-            setData(creatorStatus)
         })
-        fetch(`/api/user`).then(res => res.json()).then(data => {
+        .then((data) => {
+          const creatorStatus = data.filter((item) => item.status === 'prending');
+          console.log('cretor',creatorStatus );
+          setEvidence(creatorStatus)
+          // ทำอะไรกับข้อมูลต่อไปที่คุณต้องการ
+        })
+        .catch((error) => {
+          console.error(error);
+          // จัดการข้อผิดพลาดที่เกิดขึ้นในกรณีที่การเรียก API ล้มเหลว
+        });
+        fetch(`/api/user`, { cache: 'no-store' }).then(res => res.json()).then(data => {
+            // Status Creator
             const creatorfilter = data.filter((item) => item.role == 'creator');
             setCreator(creatorfilter)
             console.log('creator -->', creatorfilter);
+            // Status Prending
             const prendingfilter = data.filter((item) => item.role == 'prending');
             setPrending(prendingfilter)
             console.log('prending -->', prendingfilter);
+            // Status User
             const userfilter = data.filter((item) => item.role == 'user');
             setUser(userfilter)
             console.log('user -->', userfilter);
+
             const filter = data.filter((item) => item.role != 'admin');
-            setFilter(filter)
+            setFilterUser(filter)
             console.log('filter -->', filter);
         })
+        if (session?.status === "unauthenticated") {
+            window.location.href = "/";
+        }
     }, [])
+
 
     async function handleDeleteChapter(_id) {
         try {
@@ -63,36 +84,38 @@ const MyComponent = () => {
                     _id
                 })
             });
-            if(res){
+            if (res) {
                 const content = await res.json();
-                const evidence = content.evidence
+                // console.log('res ' , content);
+                const NewData = content.data
+                // location.reload()
+                console.log('res ', NewData);
+                const evidenceFilter = evidence.filter(item => item._id !== content.evidence._id)
+                console.log('resfilter', evidenceFilter);
+                setEvidence(evidenceFilter);
+
+                const creatorfilter = NewData.filter((item) => item.role == 'creator');
+                console.log('creatorStatus ---> ', creatorfilter);
+                setCreator(creatorfilter)
+                const prendingfilter = NewData.filter((item) => item.role == 'prending');
+                console.log('prendingStatus ---> ', prendingfilter);
+                setPrending(prendingfilter)
+                const userfilter = NewData.filter((item) => item.role == 'user');
+                console.log('userStatus ---> ', userfilter);
+                setUser(userfilter)
+                const filter = NewData.filter((item) => item.role !== 'admin');
+                console.log('allUser ---> ', filter);
+                setFilterUser(filter);
+
                 Swal.fire({
                     position: 'center',
                     icon: 'success',
                     title: 'อนุมัติสำเร็จ',
                     showConfirmButton: false,
                     timer: 3000
-                  })
-                    // location.reload()
-                    setData(evidence);
-                    fetch("/api/user")
-                        .then((res) => res.json())
-                        .then((data) => {
-                            console.log('update --->', data);
-                            if (Array.isArray(data)) {
-                                // Ensure that data is an array before using map
-                                const creatorfilter = data.filter((item) => item.role == 'creator');
-                                setCreator(creatorfilter)
-                                const prendingfilter = data.filter((item) => item.role == 'prending');
-                                setPrending(prendingfilter)
-                                const userfilter = data.filter((item) => item.role == 'user');
-                                setUser(userfilter)
-                                const filter = data.filter((item) => item.role !== 'admin');
-                                setFilter(filter);
-                            }
-                        });
+                })
             }
-        
+
 
         } catch (error) {
             console.log('error -->', error);
@@ -125,23 +148,20 @@ const MyComponent = () => {
                                 </Tr>
                             </Thead>
                             <Tbody>
-                                {data && Array.isArray(data) ? (
-                                    data.map((evidence) => (
-                                        <Tr key={evidence.user_id}>
-                                            <Td>{evidence.user_name}</Td>
-                                            <Td>{evidence.tel}</Td>
-                                            <Td>{DateHelper.convertJsDateToSqlDateFormat(new Date(evidence.createdAt), false)}</Td>
-                                            <Td>
-                                                <img src={evidence.Evidence} width={'80px'} className='ml-[10px] rounded-md' />
-                                            </Td>
-                                            <Td isNumeric>
-                                                <Button colorScheme='teal' variant='outline' onClick={() => handleDeleteChapter(evidence.user_id)}>Approve</Button>
-                                            </Td>
-                                        </Tr>
-                                    ))
-                                ) : (
-                                   <></>
-                                )}
+                                {evidence?.map((approve) => (
+                                    <Tr key={approve._id}>
+                                        <Td>{approve.user_name}</Td>
+                                        <Td>{approve.tel}</Td>
+                                        <Td>{DateHelper.convertJsDateToSqlDateFormat(new Date(approve.createdAt), false)}</Td>
+                                        <Td>
+                                            <img src={approve.Evidence} width={'80px'} className='ml-[10px] rounded-md' />
+                                        </Td>
+                                        <Td isNumeric>
+                                            <Button colorScheme='teal' variant='outline' onClick={() => handleDeleteChapter(approve.user_id)}>Approve</Button>
+                                        </Td>
+                                    </Tr>
+                                ))
+                                }
 
                             </Tbody>
 
@@ -157,32 +177,6 @@ const MyComponent = () => {
                     boxShadow={'md'}
                 >
                     <Text fontSize='xl'>จำนวนผู้ใช้ทั้งหมด</Text>
-                    {/* <TableContainer p={'5'}>
-                        <Table variant='simple'>
-
-                            <Thead>
-                                <Tr>
-                                    <Th>ตำแหน่ง</Th>
-                                    <Th isNumeric>จำนวน</Th>
-                                </Tr>
-                            </Thead>
-                            <Tbody>
-                                <Tr>
-                                    <Td>User</Td>
-                                    <Td isNumeric>{user?.length}</Td>
-                                </Tr>
-                                <Tr>
-                                    <Td>Creator</Td>
-                                    <Td isNumeric>{creator?.length}</Td>
-                                </Tr>
-                                <Tr>
-                                    <Td>Prending</Td>
-                                    <Td isNumeric>{prending?.length}</Td>
-                                </Tr>
-                            </Tbody>
-
-                        </Table>
-                    </TableContainer> */}
                     <div className='flex gap-10 p-5 justify-center'>
                         <Box >
                             <CircularProgress value={creator?.length} color='yellow.500' size={'200px'}>
@@ -231,19 +225,19 @@ const MyComponent = () => {
                                 <Th>วันที่สมัคร</Th>
                                 <Th >ตำแหน่ง</Th>
                                 <Th isNumeric>ล็อคอินผ่าน</Th>
-                              
+
                             </Tr>
                         </Thead>
                         <Tbody>
                             {
-                                filter?.map((user) => (
+                                filterUser?.map((user) => (
                                     <Tr key={user._id}>
                                         <Td>{user.name}</Td>
                                         <Td>{user.email}</Td>
                                         <Td> {DateHelper.convertJsDateToSqlDateFormat(new Date(user.createdAt), false)}</Td>
                                         <Td >{user.role}</Td>
                                         <Td isNumeric>{user.provider}</Td>
-                                       
+
 
                                     </Tr>
                                 ))

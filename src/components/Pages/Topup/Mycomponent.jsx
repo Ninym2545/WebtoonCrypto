@@ -117,16 +117,17 @@ const Mycomponent = () => {
         omisehandler();
     }
 
-    if (status === "unauthenticated") {
-        router?.push("/");
-    }
+
 
     const [rate, setRate] = useState([
 
     ]);
 
     useEffect(() => {
-        fetch(`/api/rate`)
+        if (status === "unauthenticated") {
+            router?.push("/");
+        }  
+        fetch(`/api/rate` , { cache: 'no-store' })
         .then((response) => response.json())
         .then((data) => setRate(data));
     },[])

@@ -3,10 +3,11 @@ import Contents from "../../../../models/Content";
 import { ObjectId } from "mongodb";
 import connect from "@/utils/db";
 
+
+await connect();
 export const GET = async (request , {params}) => {
     const {id} = params;
   try {
-    await connect();
 
     const content = await Contents.findOne({"chapter._id":id})
   

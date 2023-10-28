@@ -7,6 +7,7 @@ import { NextResponse } from "next/server";
 import connect from "@/utils/db";
 
 
+await connect();
 const handler = NextAuth({
   providers: [
     GoogleProvider({
@@ -78,7 +79,6 @@ export { handler as GET, handler as POST };
 /*----------------------------------*/
 async function signInWithOAuth({ account, profile }) {
   try {
-    await connect();
     const user = await User.findOne({
       providerAccountId: account.providerAccountId,
     });

@@ -14,11 +14,11 @@ const Content = ({typewt}) => {
   const [filteredData, setFilteredData] = useState([]); // สร้างตัวแปรใหม่เพื่อเก็บข้อมูลที่คัดกรองแล้ว
 
   useEffect(() => {
-    fetch(`/api/follow/${session?.data?.user._id}`)
+    fetch(`/api/follow/${session?.data?.user._id}`, { cache: 'no-store' })
       .then((res) => res.json())
       .then((content) => {
  
-        fetch("/api/contents")
+        fetch("/api/contents" , { cache: 'no-store' })
         .then((res) => res.json())
         .then((db2Content) => {
           // ตรวจสอบแต่ละรายการใน Db1 และคัดกรองข้อมูลจาก Db2

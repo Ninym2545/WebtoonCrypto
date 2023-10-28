@@ -2,10 +2,10 @@ import { NextResponse } from "next/server";
 import Contents from "../../../../models/Content";
 import connect from "@/utils/db";
 
+await connect();
 export const GET = async (request , {params}) => {
     const {id} = params;
   try {
-    await connect();
     const webtoon = await Contents.findById({
       _id: id
     })

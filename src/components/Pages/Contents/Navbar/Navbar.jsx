@@ -15,7 +15,7 @@ const Navbar = async ({ data }) => {
   const session = useSession();
   const [follow, setFollow] = useState();
   useEffect(() => {
-    fetch("/api/follow")
+    fetch("/api/follow" , { cache: 'no-store' })
       .then((res) => res.json())
       .then((content) => {
         const followfilter = content.find((item) => item.content_id == data._id && item.user_id == session?.data?.user._id);

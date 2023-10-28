@@ -48,24 +48,24 @@ const MyComponent = () => {
       window.location.href = "/";
     }
     if (userId) {
-      fetch(`/api/history/${userId}`)
+      fetch(`/api/history/${userId}` , { cache: 'no-store' })
         .then((response) => response.json())
         .then((data) => setHistory(data));
 
-      fetch(`/api/withdraw/${userId}`)
+      fetch(`/api/withdraw/${userId}` , { cache: 'no-store' })
         .then((response) => response.json())
         .then((data) => setWithdraw(data));
       
-      fetch(`/api/withdraw/${userId}`).then(res => res.json()).then(data => {
+      fetch(`/api/withdraw/${userId}` , { cache: 'no-store' }).then(res => res.json()).then(data => {
           const creatorStatus = data.filter((item) => item.status == 'Complete');
           setWithdrawComplete(creatorStatus)
       })
 
-      fetch(`/api/contents/${userId}`)
+      fetch(`/api/contents/${userId}`, { cache: 'no-store' })
         .then((response) => response.json())
         .then((data) => setContents(data));
 
-      fetch(`/api/buy-rent/${userId}`)
+      fetch(`/api/buy-rent/${userId}`, { cache: 'no-store' })
         .then((response) => response.json())
         .then((data) => {
           setBuyRent(data)

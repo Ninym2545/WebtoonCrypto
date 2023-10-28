@@ -4,11 +4,11 @@ import connect from "@/utils/db";
 import User from "../../../models/User";
 import WithDraw from "../../../models/Withdraw";
 
+await connect();
 export const GET = async (request) => {
   try {
-    await connect();
     const chapter = await WithDraw.find();
-
+    console.log('withdraw' , chapter);
     return new NextResponse(JSON.stringify(chapter), { status: 200 });
   } catch (err) {
     return new NextResponse("Database Error!", { status: 500 });
