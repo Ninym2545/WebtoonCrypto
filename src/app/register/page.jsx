@@ -47,8 +47,8 @@ const Page = () => {
         <div className={styles.container}>
             <form onSubmit={handleSubmit} >
                 <div className="flex flex-col items-center justify-center min-h-screen py-2 ">
-                    <div className=" bg-[#204779] rounded-2xl rounded-tr-3xl rounded-br-3xl shadow-2xl flex  w-[850px]">
-                        <div className="font-bold w-2/5  rounded-tl-2xl rounded-bl-2xl py-40 px-12 ">
+                    <div className=" rounded-3xl shadow-2xl flex  w-[500px]">
+                        {/* <div className="font-bold w-2/5  rounded-tl-2xl rounded-bl-2xl py-40 px-12 ">
                             <h2 className="text-3xl font-bold mb-2">Hello, Friend</h2>
                             <div className="border-2 w-10 border-white inline-block mb-2"></div>
                             <p className="mb-10">
@@ -59,8 +59,8 @@ const Page = () => {
                                     Sign In
                                 </p>
                             </Link>
-                        </div>
-                        <div className="text-black  w-3/5 p-5 bg-gray-100 rounded-tr-2xl rounded-br-2xl ">
+                        </div> */}
+                        <div className="text-black  w-full p-5 bg-gray-100 rounded-xl  ">
                             <div className="text-left font-bold">
                                 <span className="text-red-500">NFT </span>Webtoon{" "}
                             </div>

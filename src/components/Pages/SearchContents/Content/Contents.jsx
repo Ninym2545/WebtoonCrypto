@@ -14,14 +14,19 @@ const Content = ({typewt}) => {
 
 
   return (
+
     <div className={styles.container}>
+       <div>
+        <h1 className='text-3xl font-bold mt-11'>ผลการค้นหา</h1>
+      </div>
     <div className={styles.grid}>
+     
       {typewt ? 
       <>
         {contents
         .filter((content) => content.title === typewt)
         .map((data) => (
-          <div key={data._id} className="relative responsive-cell-rating ">
+          <div key={data._id} className="relative responsive-cell-rating mt-10">
             <div className="relative w-full bg-transparent">
               <a
                 className="w-full h-full relative overflow-hidden before:absolute before:inset-0 before:bg-grey-01 before:-z-1"

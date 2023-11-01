@@ -1,16 +1,16 @@
 "use client"
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import styles from './Content.module.css'
 import useSWR from 'swr';
 
 
-
-  
 const Content = ({typewt}) => {
 
+  // const [filtercategory , setFilterCategory] = useState()
   const fetcher = (...args) => fetch(...args).then((res) => res.json());
   const { data: contents } = useSWR(`/api/contents/`, fetcher , { suspense: true })
 
+  // const lengthfilter = contents.filter(item => item.category = typewt)
 
 
   return (
@@ -26,6 +26,9 @@ const Content = ({typewt}) => {
         </div>
       )
     )} */}
+    </div>
+    <div className='text-3xl font-semibold my-3 mb-5  flex'>
+      จำนวนทั้งหมด {contents.filter((content) => content.category === typewt).length} ตอน
     </div>
     <div className={styles.grid}>
       {contents

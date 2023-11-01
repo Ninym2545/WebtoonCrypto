@@ -91,6 +91,11 @@ const Navbar = async ({ data }) => {
       console.log('error -->', error);
     }
   }
+
+  const handleExcange = () => {
+    const windowFeatures = 'width=500,height=800'; // Set the desired window dimensions
+    window.open('/exchange', '_blank', windowFeatures);
+  }
   return (
     <div className="fixed w-full">
       <div id="hiddenElement">
@@ -101,7 +106,23 @@ const Navbar = async ({ data }) => {
                 <ArrowLeftIcon className="hidden h-6 w-6  sm:inline" />
               </button>
             </Link>
-
+            <div className="ml-auto mr-16 flex gap-12 font-semibold items-center">
+              <div>
+              <Button colorScheme='teal'  size={'sm'} variant='outline' onClick={handleExcange}>
+                แลกตั๋ว
+              </Button>
+              </div>
+              <div>
+              จำนวนตั๋วเช่า : {session?.data?.user.ticker_rent} ตั๋ว
+              </div>
+              <div>
+              จำนวนตั๋วซื้อเก็บ : {session?.data?.user.ticker_buy} ตั๋ว
+              </div>
+              <div>
+              จำนวนแคช: {session?.data?.user.coin.toLocaleString()} แคช
+              </div>
+            </div>
+           
             <div className="flex items-center space-x-4 text-sm ">
               <div>
                 {follow ? (

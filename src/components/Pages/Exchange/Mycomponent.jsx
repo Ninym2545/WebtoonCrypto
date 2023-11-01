@@ -54,7 +54,7 @@ const Mycomponent = () => {
         try {
             const user = session.data.user;
 
-            if (user.coin === 0) {
+            if (user.coin < session.data?.user.coin) {
                 Swal.fire({
                     icon: 'error',
                     title: 'เกิดข้อผิดพลาด',
@@ -171,6 +171,7 @@ const Mycomponent = () => {
                                 `You bought ${content.ticket} tickets successfully. Please wait a moment.`,
                                 'success'
                             );
+                            location.reload();
                             // You can add more logic here if needed
                         });
                     } else {

@@ -36,7 +36,7 @@ import { useSession, signOut, signIn } from 'next-auth/react';
 import React, { useEffect, useState } from 'react'
 
 export default function Navbar() {
-    
+
     const session = useSession();
     // --- Dark Mode Light Mode --- //
     const { isOpen, onToggle } = useDisclosure()
@@ -53,7 +53,7 @@ export default function Navbar() {
                     maxW={'7xl'}
                     minH={'60px'}
                     py={{ base: 2 }}
-                    
+
                 >
                     <Flex
                         flex={{ base: 1, md: 'auto' }}
@@ -143,7 +143,7 @@ export default function Navbar() {
                                     }
                                     <MenuDivider />
                                     <Link href={'#'}>
-                                        <MenuItem  onClick={signOut} color={'red.400'}>ออกจากระบบ</MenuItem>
+                                        <MenuItem onClick={signOut} color={'red.400'}>ออกจากระบบ</MenuItem>
                                     </Link>
                                 </MenuList>
                             </Menu>
@@ -156,17 +156,20 @@ export default function Navbar() {
 
                     {session.status === "unauthenticated" && (
                         <Stack
-                        alignItems={'center'}
+                            alignItems={'center'}
                             flex={{ base: 1, md: 0 }}
                             justify={'flex-end'}
                             direction={'row'}
                             ml={'2'}
-                            spacing={6}>
+                            spacing={2}>
 
-                            <Button as={'a'}  fontSize={'md'} fontWeight={400} href='login'>
+                            <Button as={'a'} fontSize={'md'} fontWeight={400} href='login'>
                                 เข้าสู่ระบบ
                             </Button>
-
+                            <Button colorScheme='teal' variant='outline' as={'a'} fontSize={'md'} fontWeight={400} href='register'>
+                            สมัครสมาชิก
+                            </Button>
+                        
                         </Stack>
 
                     )}
@@ -362,11 +365,9 @@ const NAV_ITEMS = [
     {
         label: 'หมวดหมู่',
         href: '/category',
-        children: [
-          {
-            label: 'ค้นหาการ์ตูน',
-            href: '/searchcontents',
-          }
-        ],
     },
+    // {
+    //     label: 'ค้นหาการ์ตูน',
+    //     href: '/searchcontents',
+    // },
 ]

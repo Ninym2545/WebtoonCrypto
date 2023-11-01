@@ -180,6 +180,32 @@ const Chapter = ({ webtoon }) => {
       </span>
     }
   }
+  const displayDate = (orders , chap) =>{
+    const year = new Date().getFullYear()
+    const order = orders?.find(order =>
+      order?.chapter_id === chap._id 
+    )
+    console.log('orderdate' , order);
+    if (!order) return <p className="whitespace-pre-wrap break-all break-words support-break-word overflow-hidden text-ellipsis !whitespace-nowrap leading-14 opacity-80 s11-regular-white">
+   วันที่สร้าง: {DateHelper.convertJsDateToSqlDateFormat(new Date(chap.date_upload), false)}
+</p>
+    if(order) return <>
+    {
+      order.status === "ซื้อเก็บ" ? <>
+      <p className="whitespace-pre-wrap break-all break-words support-break-word overflow-hidden text-ellipsis !whitespace-nowrap leading-14 opacity-90 s11-regular-white">
+      <span className='text-green-500'>ซื้อเก็บถาวร </span>
+      {/* {DateHelper.convertJsDateToSqlDateFormat(new Date(order.exdate), false)} */}
+    </p>
+      </> :
+      <p className="whitespace-pre-wrap break-all break-words support-break-word overflow-hidden text-ellipsis !whitespace-nowrap leading-14 opacity-80 s11-regular-white">
+      <span className='text-red-500'>วันหมดอายุ: </span>
+      {DateHelper.convertJsDateToSqlDateFormat(new Date(order.exdate), false)}
+    </p>
+      
+    }
+    </>
+  
+  }
   return (
     <div>
       <div className="mx-auto  pb-0  items-center mt-6 mb-1">
@@ -238,15 +264,21 @@ const Chapter = ({ webtoon }) => {
 
                     </p>
                     <div className="flex items-center mt-1">
-                      <p className="whitespace-pre-wrap break-all break-words support-break-word overflow-hidden text-ellipsis !whitespace-nowrap leading-14 opacity-50 s11-regular-white">
-                        {DateHelper.convertJsDateToSqlDateFormat(new Date(chap.date_upload), false)}
-                      </p>
+                        
+                      {/* {DateHelper.convertJsDateToSqlDateFormat(new Date(chap.date_upload), false)} */}
+                      {
+                            displayDate(orders, chap)
+                          }   
+                           {/* <p className="whitespace-pre-wrap break-all break-words support-break-word overflow-hidden text-ellipsis !whitespace-nowrap leading-14 opacity-50 s11-regular-white">
+                            heelos
+                         </p> */}
+                         
                     </div>
                   </Box>
                 </a>
               </li>
-
             ))}
+
           </>
 
 
@@ -266,8 +298,8 @@ const Chapter = ({ webtoon }) => {
             <Box >
               <form onSubmit={handleFormSubmit}>
                 <Box display={'flex'} my={'10'} px={'5'} justifyContent={'center'} alignItems={'center'} gap={'20px'}>
-                  <Text fontSize={'xl'}>คุณต้องการใช้ตั๋วเพื่อเปิดอ่าน ? </Text>
-                  <Select placeholder='ประเภทตั๋ว' w={'50'}>
+                  <Text fontSize={'xl'}>คุณต้องการใช้ตั๋ว 1 ตั๋วเพื่อเปิดอ่าน ? </Text>
+                  <Select placeholder='เลือกประเภทตั๋ว' w={'50'}>
                     {
                       tickerRent ? <option value={rent}>ตั๋วเช่า {tickerRent}</option> :
                         <></>

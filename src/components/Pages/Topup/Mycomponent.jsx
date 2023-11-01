@@ -280,6 +280,7 @@ const Mycomponent = () => {
                   title: "Success",
                   text: `เติมแคช ${responseData.coin} สำเร็จ`,
                 });
+                location.reload()
               } else {
                 Swal.fire({
                   icon: "error",

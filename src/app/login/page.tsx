@@ -43,8 +43,8 @@ const Page = () => {
   return (
     <div className={styles.container}>
       <div className="flex flex-col items-center justify-center min-h-screen py-2 ">
-        <div className="bg-gray-100 rounded-2xl rounded-tr-3xl rounded-br-3xl shadow-2xl flex  w-[850px]">
-          <div className="text-black  w-3/5 p-5">
+        <div className="bg-gray-100 rounded-2xl rounded-tr-3xl rounded-br-3xl shadow-2xl flex  w-[500px]">
+          <div className="text-black  w-full p-5">
             <div className="text-left font-bold">
               <span className="text-red-500">NFT </span>Webtoon{" "}
             </div>
@@ -104,7 +104,7 @@ const Page = () => {
               </div>
             </div>
           </div>
-          <div className="font-bold w-2/5 bg-[#204779] rounded-tr-2xl rounded-br-2xl py-36 px-12 ">
+          {/* <div className="font-bold w-2/5 bg-[#204779] rounded-tr-2xl rounded-br-2xl py-36 px-12 ">
             <h2 className="text-3xl font-bold mb-2">Hello, Friend</h2>
             <div className="border-2 w-10 border-white inline-block mb-2"></div>
             <p className="mb-10">
@@ -115,7 +115,7 @@ const Page = () => {
                 Sign Up
               </p>
             </Link>
-          </div>
+          </div> */}
         </div>
       </div>
     </div>
