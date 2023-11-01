@@ -51,10 +51,11 @@ const Mycomponent = () => {
     }
 
     async function handleRentTicket(index) {
+        console.log('tich' ,index.rate);
         try {
             const user = session.data.user;
 
-            if (user.coin < session.data?.user.coin) {
+            if (user.coin < index.rate) {
                 Swal.fire({
                     icon: 'error',
                     title: 'เกิดข้อผิดพลาด',
@@ -122,7 +123,7 @@ const Mycomponent = () => {
         try {
             const user = session.data.user;
 
-            if (user.coin < 200) {
+            if (user.coin < index.rate) {
                 Swal.fire({
                     icon: 'error',
                     title: 'เกิดข้อผิดพลาด',
@@ -170,7 +171,7 @@ const Mycomponent = () => {
                                 'Exchange Successful!',
                                 `You bought ${content.ticket} tickets successfully. Please wait a moment.`,
                                 'success'
-                            );
+                            )
                             location.reload();
                             // You can add more logic here if needed
                         });
